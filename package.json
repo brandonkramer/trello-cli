@@ -1,6 +1,6 @@
 {
   "name": "trelly",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "trelly — fast Trello CLI with multi-profile auth, MCP server, and kanban TUI",
   "type": "module",
   "license": "MIT",
