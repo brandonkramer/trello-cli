@@ -33,6 +33,7 @@ npm package root is the plugin bundle (skills + MCP + launcher scripts).
 | Claude Code | [skills/README.md — Claude Code](skills/README.md#claude-code) |
 | Cursor | [skills/README.md — Cursor](skills/README.md#cursor) |
 | Codex | [skills/README.md — Codex](skills/README.md#codex) |
+| Antigravity (`agy`) | [skills/README.md — Antigravity](skills/README.md#antigravity) |
 | MCP only | [skills/README.md — MCP only](skills/README.md#mcp-only-all-ides) |
 
 ## Plugin layout
@@ -44,6 +45,8 @@ npm package root is the plugin bundle (skills + MCP + launcher scripts).
 | `.claude-plugin/plugin.json` | Claude Code manifest |
 | `.mcp.json` | Claude/Codex MCP (`${CLAUDE_PLUGIN_ROOT}/bin/trelly-mcp`) |
 | `.codex-plugin/plugin.json` | Codex manifest |
+| `.antigravity-plugin/plugin.json` | Google Antigravity manifest |
+| `.antigravity-plugin/mcp_config.json` | Google Antigravity MCP (bundled `bin/trelly-mcp`) |
 | `skills/` | Agent skills (source of truth) |
 | `assets/logo.svg` | Plugin logo |
 | [PRIVACY.md](PRIVACY.md) | Data handling |
@@ -68,27 +71,6 @@ claude plugin install "$(npm root -g)/trelly"
 ```
 
 Reload Claude Code. Confirm MCP server **trelly** and skills load.
-
-## Submit to official marketplaces
-
-| Platform | Action |
-|----------|--------|
-| **Cursor** | [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish) — repo `https://github.com/brandonkramer/trelly` |
-| **Claude Code** | [clau.de/plugin-directory-submission](https://clau.de/plugin-directory-submission) — same repo |
-
-Requirements:
-
-- Open source (MIT) ✅
-- Valid manifests and skill frontmatter ✅
-- Logo at `assets/logo.svg` ✅
-- Privacy summary in [PRIVACY.md](PRIVACY.md) ✅
-- Manual review on updates (Cursor); Anthropic review for official directory
-
-After Claude approval, users install with:
-
-```text
-/plugin install trelly@claude-plugins-official
-```
 
 ## MCP safety notes for reviewers
 

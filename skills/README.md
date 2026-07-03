@@ -36,6 +36,7 @@ trelly auth list         # verify
 | **Claude Code** | `claude plugin install "$(npm root -g)/trelly"` | ✅ | ✅ | Reload after install |
 | **Cursor** | Copy plugin → `~/.cursor/plugins/local/trelly` | ✅ | ✅ | **Copy**, not symlink |
 | **Codex** | Local marketplace + `/plugins` install | ✅ | ✅ | See Codex section below |
+| **Antigravity** | `agy plugin install "$(npm root -g)/trelly"` | ✅ | ✅ | Staged in config directory |
 
 **MCP-only** (tools, no skills): add `trelly-mcp` to your IDE MCP config — [MCP only](#mcp-only-all-ides).
 
@@ -263,6 +264,32 @@ Wire `trelly-mcp` in Codex MCP config (same as [mcp.example.json](../mcp.example
 
 ---
 
+## Antigravity
+
+Full **plugin** = skills + MCP (`trelly-mcp` via bundled `bin/`).
+
+### Install (recommended)
+
+```bash
+npm install -g trelly
+trelly auth setup && trelly auth login
+
+agy plugin install "$(npm root -g)/trelly/.antigravity-plugin"
+```
+
+Or install from a local repo clone:
+
+```bash
+agy plugin install /path/to/trelly/.antigravity-plugin
+```
+
+### Verify
+
+- Run `agy plugin list` and confirm `trelly` is listed and enabled.
+- Verify skills and MCP tools work as expected.
+
+---
+
 ## MCP only (all IDEs)
 
 When you only want Trello **tools** in chat (no bundled skills):
@@ -299,6 +326,7 @@ When you only want Trello **tools** in chat (no bundled skills):
 | `skills/` | Agent instructions — **source of truth** |
 | `bin/trelly` | CLI (human output + `--json`) |
 | `bin/trelly-mcp` | MCP stdio server |
+| `.antigravity-plugin/` | Google Antigravity plugin manifest & MCP config |
 | `.claude-plugin/` + `.mcp.json` | Claude Code plugin + MCP wiring |
 | `.codex-plugin/` + `.mcp.json` | Codex plugin + MCP wiring |
 | `.cursor-plugin/` + `.cursor-plugin/mcp.json` | Cursor plugin + MCP wiring |

@@ -38,6 +38,7 @@
     ".claude-plugin/",
     ".codex-plugin/",
     ".cursor-plugin/",
+    ".antigravity-plugin/",
     ".mcp.json",
     "PLUGIN.md",
     "PRIVACY.md"
