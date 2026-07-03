@@ -18,6 +18,11 @@ run_ts() {
     exec "$ROOT/node_modules/.bin/tsx" "$ROOT/$entry" "$@"
   fi
 
+  # hoisted layout: installed as a dependency, tsx lands in the parent .bin
+  if [[ -x "$ROOT/../.bin/tsx" ]]; then
+    exec "$ROOT/../.bin/tsx" "$ROOT/$entry" "$@"
+  fi
+
   if command -v tsx >/dev/null 2>&1; then
     exec tsx "$ROOT/$entry" "$@"
   fi

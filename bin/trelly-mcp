@@ -1,2 +1,9 @@
 #!/usr/bin/env bash
-exec "$(dirname "$0")/run-ts" "src/mcp/server.ts" "$@"
+# npm/bunx/brew invoke this via symlink; walk back to the real file first
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ "$SOURCE" != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+exec "$(cd -P "$(dirname "$SOURCE")" && pwd)/run-ts" "src/mcp/server.ts" "$@"

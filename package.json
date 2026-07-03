@@ -1,10 +1,10 @@
 {
   "name": "trelly",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "trelly — fast Trello CLI with multi-profile auth, MCP server, and kanban TUI",
   "type": "module",
   "license": "MIT",
-  "homepage": "https://github.com/brandonkramer/trello-cli#readme",
+  "homepage": "https://github.com/brandonkramer/trelly#readme",
   "keywords": [
     "trello",
     "cli",
@@ -15,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/brandonkramer/trello-cli.git"
+    "url": "https://github.com/brandonkramer/trelly.git"
   },
   "publishConfig": {
     "access": "public"
