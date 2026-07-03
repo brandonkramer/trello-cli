@@ -1,0 +1,78 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #172b4d;
+  padding: 10px 12px;
+  background: #fff;
+}
+
+button.row {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  border: 0;
+  border-radius: 3px;
+  background: rgba(9, 30, 66, 0.04);
+  color: #172b4d;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button.row:hover { background: rgba(9, 30, 66, 0.08); }
+
+button.primary {
+  background: #0079bf;
+  color: #fff;
+}
+
+button.primary:hover { background: #026aa7; }
+
+.muted { color: #5e6c84; font-size: 12px; }
+
+.counts { margin-bottom: 8px; font-size: 13px; }
+.counts span { margin-right: 12px; }
+
+ul.attachments { list-style: none; margin: 4px 0 8px; }
+ul.attachments li {
+  padding: 3px 0;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ul.attachments a { color: #0079bf; text-decoration: none; }
+ul.attachments a:hover { text-decoration: underline; }
+
+h2 { font-size: 16px; margin: 14px 0 6px; }
+h2:first-child { margin-top: 0; }
+
+ol.steps { margin: 6px 0 10px 20px; }
+ol.steps li { margin-bottom: 10px; }
+
+pre {
+  background: #091e420a;
+  border-radius: 3px;
+  padding: 8px 10px;
+  font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  overflow-x: auto;
+  margin: 6px 0;
+  white-space: pre;
+}
+
+.copybar { display: flex; gap: 6px; align-items: center; margin-bottom: 10px; }
+.copybar button {
+  border: 0;
+  border-radius: 3px;
+  background: rgba(9, 30, 66, 0.06);
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #172b4d;
+}
+.copybar button:hover { background: rgba(9, 30, 66, 0.12); }
+
+a.plain { color: #0079bf; text-decoration: none; }
+a.plain:hover { text-decoration: underline; }
