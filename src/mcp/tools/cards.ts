@@ -12,7 +12,10 @@ export function registerCardTools(server: McpServer): void {
       inputSchema: {
         profile: profileField,
         cardId: z.string().min(1),
-        fields: z.string().optional(),
+        fields: z
+          .string()
+          .default("id,name,desc,due,dueComplete,idList,shortUrl,labels")
+          .describe('comma-separated fields, "all" for everything'),
       },
       annotations: { readOnlyHint: true },
       outputSchema,
