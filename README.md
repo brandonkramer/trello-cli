@@ -165,6 +165,7 @@ Typical configuration paths:
 - **Cursor**: `~/.cursor/mcp.json`
 - **Claude Desktop**: `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `~/.config/Claude/claude_desktop_config.json` (Linux)
 - **Antigravity (`agy`)**: `~/.gemini/antigravity/mcp_config.json`
+- **Codex**: `~/.codex/config.toml` (TOML format under `[mcp_servers.trelly]`)
 
 After `npm install -g trelly`, `trelly-mcp` is on your PATH. From a clone, use the full path to `bin/trelly-mcp`.
 
