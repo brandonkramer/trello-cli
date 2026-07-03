@@ -75,6 +75,17 @@ export function registerCardCommands(program: Command): void {
     );
 
   cards
+    .command("comments <id>")
+    .description("List comments on a card")
+    .option("--limit <n>", "Max comments", "50")
+    .action((id, opts, cmd) =>
+      run(cmd, async () => {
+        const { client } = getClient(rootOpts(cmd).profile);
+        return client.cardComments(id, { limit: opts.limit });
+      }),
+    );
+
+  cards
     .command("comment <id>")
     .requiredOption("--text <text>", "Comment body")
     .action((id, opts, cmd) =>

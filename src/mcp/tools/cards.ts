@@ -81,6 +81,22 @@ export function registerCardTools(server: McpServer): void {
   );
 
   server.registerTool(
+    "trello_card_comments",
+    {
+      description: "List comments on a card.",
+      inputSchema: {
+        profile: profileField,
+        cardId: z.string().min(1),
+        limit: z.number().int().positive().optional(),
+      },
+      annotations: { readOnlyHint: true },
+      outputSchema,
+    },
+    async ({ profile, cardId, limit }) =>
+      withClient(profile, (client) => client.cardComments(cardId, { limit })),
+  );
+
+  server.registerTool(
     "trello_card_comment",
     {
       description: "Add a comment to a card.",

@@ -1,155 +1,84 @@
 # trello-cli
 
-Fast Trello CLI with **multi-profile auth** and an **MCP server** for Cursor / Codex / Claude / any MCP client.
+Trello CLI + MCP server. JSON on stdout (`{ ok, profile, data }`). Runs on **Bun** (or **tsx** / Node 22+ via `bin/run-ts`).
 
-TypeScript CLI run via `bin/run-ts` (**Bun** when available, otherwise **tsx** on Node 22+). Every command returns structured JSON (`{ ok, profile, data }`).
+Boards, lists, cards, checklists, labels, custom fields, search, webhooks, multi-profile auth, raw `trello api` escape hatch.
 
-## Features
-
-- Multiple named auth profiles (`personal`, `work`, …)
-- Environment override via `TRELLO_API_KEY` + `TRELLO_TOKEN`
-- Full coverage: boards, lists, cards, checklists, labels, custom fields, search, webhooks, members, orgs
-- Raw REST escape hatch: `trello api --path /boards/{id} -X GET`
-- MCP tools mirroring the CLI (plus `trello_api` for anything else)
-
-## Install
+## Quick start
 
 ```bash
-cd ~/dev/trello-cli   # replace with your clone path
-bun install           # Bun 1.2+; primary install path
+cd ~/dev/trello-cli
+bun install
+./bin/trello auth setup    # once: API key from power-ups/admin
+./bin/trello auth login    # browser → Allow
+./bin/trello --pretty boards list
 ```
 
-`postinstall` automatically chmods `bin/trello`, `bin/trello-mcp`, and `bin/run-ts` — manual `chmod +x` is optional.
+No Bun? `npm install` — tsx is the fallback runtime.
 
-**No Bun?** Install with Node 22+ and tsx runs as fallback:
+Optional: `bun link` or add `bin/` to `PATH`.
 
-```bash
-npm install           # keeps tsx in devDependencies for bin/run-ts
-```
+## Auth
 
-Optional global link:
+Two steps: **API key** (app identity, once) → **token** (your account, per profile).
 
-```bash
-bun link
-# or add ~/dev/trello-cli/bin to PATH
-```
+Register a throwaway app at [power-ups/admin](https://trello.com/power-ups/admin) — you are **not** installing a Power-Up on your boards. Pick any workspace you **admin** (personal is fine); that choice does not limit which boards you can use. Iframe URL can be any `https://` placeholder (e.g. `https://example.com`). Add `http://127.0.0.1:14189` to **Allowed Origins** for automatic browser login.
 
-## Auth (multi-profile)
-
-**You do not need to copy tokens manually.** One-time app setup, then browser login.
-
-### One-time setup (~2 min)
+After login the CLI is **you** on Trello — same boards and permissions as the website.
 
 ```bash
 trello auth setup
-```
-
-This opens https://trello.com/power-ups/admin, walks you through creating a Power-Up API key, and asks you to add `http://127.0.0.1:14189` to **Allowed Origins** (required for automatic callback).
-
-### Login (per profile)
-
-Default login requests `read,write` scope with a **30-day** token expiration:
-
-```bash
-trello auth login                    # opens browser, captures token automatically
-trello auth login --profile work     # second Trello account
-trello auth login --manual           # fallback: paste token if redirect blocked
-trello auth login --full-access      # read,write,account scope + never-expiring token
-trello auth url                      # print browser authorization URL (no login)
-```
-
-Non-interactive (CI/scripts):
-
-```bash
-trello auth setup --api-key KEY
-trello auth login --api-key KEY --token TOKEN --profile ci
-```
-
-```bash
+trello auth login
+trello auth login --profile work
+trello auth login --manual              # paste token if redirect blocked
+trello auth login --full-access         # never-expiring token
 trello auth list
 trello auth use work
 trello auth logout --profile work
+trello auth url
 ```
 
-Credentials live at `~/.config/trello-cli/config.json` (mode `600`).
+Non-interactive: `trello auth setup --api-key KEY` then `trello auth login --api-key KEY --token TOKEN`.
 
-The **API key** is tied to your Power-Up (one-time). The **token** is per user/account and is obtained via browser — no manual copy unless you use `--manual`.
+Environment override: `TRELLO_APP_API_KEY`, `TRELLO_API_KEY`, `TRELLO_TOKEN`, `TRELLO_PROFILE`.
 
-### Environment auth
+Credentials: `~/.config/trello-cli/config.json` (mode `600`).
 
-```bash
-export TRELLO_APP_API_KEY=...   # optional shared app key
-export TRELLO_API_KEY=...       # per-request override
-export TRELLO_TOKEN=...
-export TRELLO_PROFILE=work
-```
-
-## CLI examples
+## Usage
 
 ```bash
 trello --pretty boards list
 trello --profile work boards lists BOARD_ID
-trello cards create --list LIST_ID --name "Ship feature" --desc "Details"
+trello cards create --list LIST_ID --name "Ship feature"
 trello cards move CARD_ID --list DONE_LIST_ID
-trello cards comment CARD_ID --text "Done in PR #42"
 trello search "customer onboarding"
-trello webhooks list
 trello api -X PUT --path /cards/CARD_ID --query idList=LIST_ID
 ```
 
-Global flags:
+Flags: `-p, --profile <name>`, `--pretty`.
 
-- `-p, --profile <name>` — auth profile
-- `--pretty` — indented JSON
+**Archive** (reversible) vs **delete** (permanent): prefer `cards archive` / `boards archive` over `cards delete` / `boards delete`.
 
-### Archive vs delete
+## MCP
 
-**Archive** closes an item — reversible in the Trello UI. **Delete** is permanent.
-
-| Action | CLI | Effect |
-|--------|-----|--------|
-| Close (safe) | `trello cards archive CARD_ID` | Reversible |
-| Close (safe) | `trello boards archive BOARD_ID` | Reversible |
-| Permanent | `trello cards delete CARD_ID` | Irreversible |
-| Permanent | `trello boards delete BOARD_ID` | Irreversible |
-
-Prefer archive unless you explicitly need to destroy data.
-
-## MCP (Cursor)
-
-See `mcp.example.json` in the repo root. Add to `~/.cursor/mcp.json` (replace the path with your clone):
+Add to `~/.cursor/mcp.json` (see `mcp.example.json`):
 
 ```json
 "trello-cli": {
   "command": "$HOME/dev/trello-cli/bin/trello-mcp",
-  "env": {
-    "TRELLO_PROFILE": "default"
-  }
+  "env": { "TRELLO_PROFILE": "default" }
 }
 ```
 
-Restart Cursor. Available tools include `trello_boards_list`, `trello_card_create`, `trello_card_archive`, `trello_board_archive`, `trello_search`, `trello_api`, etc.
-
-Use `profile` on any MCP tool to target a non-default account.
-
-**For agents:** prefer `trello_card_archive` / `trello_board_archive` to close items safely. `trello_card_delete` is **permanent and irreversible** — there is no MCP board-delete tool.
+Tools mirror the CLI (`trello_boards_list`, `trello_card_create`, `trello_search`, `trello_api`, …). Agents: prefer `*_archive` over `trello_card_delete` (permanent).
 
 ## Development
 
-Stack: Bun, TypeScript 6, Biome, Commander 15, Zod 4, MCP SDK 1.29 (tsx kept for Node fallback).
-
 ```bash
-bun install
-bun run typecheck
-bun test
-bun run lint          # Biome
-bun run fmt           # format
-bun run fmt:check     # format check (CI)
-bun run mcp           # stdio MCP server (manual testing)
-bun run trello -- auth list
+bun run typecheck && bun test && bun run lint
 ```
 
-CI (`.github/workflows/ci.yml`) runs typecheck, lint, format check, and tests via `bun install --frozen-lockfile`.
+CI runs the same via `bun install --frozen-lockfile`. See `AGENTS.md` for conventions.
 
 ## License
 

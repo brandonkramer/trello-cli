@@ -203,6 +203,13 @@ export class TrelloClient {
     return this.get(`/cards/${id}/actions`, query);
   }
 
+  cardComments(id: string, query: Query = {}) {
+    return this.get(`/cards/${id}/actions`, {
+      filter: "commentCard",
+      ...query,
+    });
+  }
+
   cardAttachments(id: string) {
     return this.get(`/cards/${id}/attachments`);
   }

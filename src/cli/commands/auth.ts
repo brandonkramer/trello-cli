@@ -42,6 +42,8 @@ export function registerAuthCommands(program: Command): void {
 One-time setup (per Trello account / Power-Up):
 
 1. Create or open a Power-Up → API Key tab → Generate API Key
+   (Pick any workspace you admin — personal is fine. This does not
+   limit which boards you can use. Never install the app on a board.)
 2. Allowed Origins → add: ${SETUP_ALLOWED_ORIGIN}
    (required for automatic browser login)
 3. Paste your API key below
