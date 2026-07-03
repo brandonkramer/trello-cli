@@ -152,7 +152,7 @@ Per-subcommand flags: `trelly <group> --help`. Curated examples and agent guidan
 
 ## MCP
 
-Add to `~/.cursor/mcp.json` (see `mcp.example.json`):
+Add `trelly` to your IDE or platform MCP server configuration (under `"mcpServers"`, see [mcp.example.json](mcp.example.json)):
 
 ```json
 "trelly": {
@@ -160,6 +160,11 @@ Add to `~/.cursor/mcp.json` (see `mcp.example.json`):
   "env": { "TRELLO_PROFILE": "default" }
 }
 ```
+
+Typical configuration paths:
+- **Cursor**: `~/.cursor/mcp.json`
+- **Claude Desktop**: `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `~/.config/Claude/claude_desktop_config.json` (Linux)
+- **Antigravity (`agy`)**: `~/.gemini/antigravity/mcp_config.json`
 
 After `npm install -g trelly`, `trelly-mcp` is on your PATH. From a clone, use the full path to `bin/trelly-mcp`.
 
