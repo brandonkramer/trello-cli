@@ -2,8 +2,7 @@
 
 function applyTheme(t) {
   try {
-    var theme = (t.getContext() || {}).theme;
-    document.body.classList.toggle("dark", theme === "dark");
+    document.body.classList.toggle("dark", (t.getContext() || {}).theme === "dark");
   } catch (_err) {
     // theme is cosmetic — never let it block the page
   }
