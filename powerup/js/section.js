@@ -1,6 +1,7 @@
-/* global TrelloPowerUp, copyText, agentPrompt */
+/* global TrelloPowerUp, applyTheme, copyText, agentPrompt */
 
 var t = TrelloPowerUp.iframe();
+applyTheme(t);
 
 function esc(text) {
   var div = document.createElement("div");

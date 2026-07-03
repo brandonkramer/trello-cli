@@ -1,6 +1,7 @@
-/* global TrelloPowerUp, copyText */
+/* global TrelloPowerUp, applyTheme, copyText */
 
 var t = TrelloPowerUp.iframe();
+applyTheme(t);
 
 document.querySelectorAll("button[data-copy]").forEach((button) => {
   button.addEventListener("click", () => {

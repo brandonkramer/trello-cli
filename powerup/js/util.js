@@ -1,5 +1,10 @@
 /* Shared helpers for trelly Power-Up iframes. */
 
+function applyTheme(t) {
+  var theme = (t.getContext() || {}).theme;
+  document.body.classList.toggle("dark", theme === "dark");
+}
+
 function copyText(text) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     return navigator.clipboard.writeText(text).catch(() => copyFallback(text));

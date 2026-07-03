@@ -1,3 +1,33 @@
+:root {
+  --bg: #fff;
+  --fg: #172b4d;
+  --muted: #5e6c84;
+  --chip: rgba(9, 30, 66, 0.04);
+  --chip-hover: rgba(9, 30, 66, 0.08);
+  --chip-strong: rgba(9, 30, 66, 0.06);
+  --chip-strong-hover: rgba(9, 30, 66, 0.12);
+  --link: #0079bf;
+  --primary: #0079bf;
+  --primary-hover: #026aa7;
+  --primary-fg: #fff;
+  --pre: rgba(9, 30, 66, 0.04);
+}
+
+body.dark {
+  --bg: #1d2125;
+  --fg: #b6c2cf;
+  --muted: #8c9bab;
+  --chip: rgba(161, 189, 217, 0.08);
+  --chip-hover: rgba(161, 189, 217, 0.16);
+  --chip-strong: rgba(161, 189, 217, 0.1);
+  --chip-strong-hover: rgba(161, 189, 217, 0.2);
+  --link: #579dff;
+  --primary: #579dff;
+  --primary-hover: #85b8ff;
+  --primary-fg: #1d2125;
+  --pre: rgba(161, 189, 217, 0.08);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -13,9 +43,9 @@ body {
     Helvetica,
     Arial,
     sans-serif;
-  color: #172b4d;
+  color: var(--fg);
   padding: 10px 12px;
-  background: #fff;
+  background: var(--bg);
 }
 
 button.row {
@@ -26,27 +56,27 @@ button.row {
   margin-bottom: 4px;
   border: 0;
   border-radius: 3px;
-  background: rgba(9, 30, 66, 0.04);
-  color: #172b4d;
+  background: var(--chip);
+  color: var(--fg);
   font-size: 14px;
   cursor: pointer;
 }
 
 button.row:hover {
-  background: rgba(9, 30, 66, 0.08);
+  background: var(--chip-hover);
 }
 
 button.primary {
-  background: #0079bf;
-  color: #fff;
+  background: var(--primary);
+  color: var(--primary-fg);
 }
 
 button.primary:hover {
-  background: #026aa7;
+  background: var(--primary-hover);
 }
 
 .muted {
-  color: #5e6c84;
+  color: var(--muted);
   font-size: 12px;
 }
 
@@ -70,11 +100,16 @@ ul.attachments li {
   white-space: nowrap;
 }
 ul.attachments a {
-  color: #0079bf;
+  color: var(--link);
   text-decoration: none;
 }
 ul.attachments a:hover {
   text-decoration: underline;
+}
+
+h1 {
+  font-size: 20px;
+  margin: 0 0 10px;
 }
 
 h2 {
@@ -85,15 +120,19 @@ h2:first-child {
   margin-top: 0;
 }
 
-ol.steps {
-  margin: 6px 0 10px 20px;
+p {
+  margin: 6px 0;
 }
-ol.steps li {
-  margin-bottom: 10px;
+
+ul.plain-list {
+  margin: 6px 0 6px 20px;
+}
+ul.plain-list li {
+  margin-bottom: 4px;
 }
 
 pre {
-  background: #091e420a;
+  background: var(--pre);
   border-radius: 3px;
   padding: 8px 10px;
   font:
@@ -115,18 +154,18 @@ pre {
 .copybar button {
   border: 0;
   border-radius: 3px;
-  background: rgba(9, 30, 66, 0.06);
+  background: var(--chip-strong);
   padding: 4px 8px;
   font-size: 12px;
   cursor: pointer;
-  color: #172b4d;
+  color: var(--fg);
 }
 .copybar button:hover {
-  background: rgba(9, 30, 66, 0.12);
+  background: var(--chip-strong-hover);
 }
 
 a.plain {
-  color: #0079bf;
+  color: var(--link);
   text-decoration: none;
 }
 a.plain:hover {

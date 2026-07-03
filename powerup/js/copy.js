@@ -1,6 +1,7 @@
-/* global TrelloPowerUp, copyText, mcpSnippet, agentPrompt */
+/* global TrelloPowerUp, applyTheme, copyText, mcpSnippet, agentPrompt */
 
 var t = TrelloPowerUp.iframe();
+applyTheme(t);
 
 function bind(id, getValue) {
   document.getElementById(id).addEventListener("click", () => {

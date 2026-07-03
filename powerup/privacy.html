@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>trelly privacy</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <div id="content" style="max-width: 640px">
+    <h1>trelly privacy</h1>
+
+    <h2>The Power-Up</h2>
+    <p>
+      The trelly Power-Up runs entirely in your browser using Trello's Power-Up client
+      API. It reads only the card data Trello hands it (name, URL, badges, attachments)
+      to render its sections and copy buttons.
+    </p>
+    <ul class="plain-list">
+      <li>No authorization or token is requested — it cannot read anything you can't already see.</li>
+      <li>No requests to any server other than Trello's CDN (which serves the Power-Up client library).</li>
+      <li>Nothing is stored, logged, or transmitted. No analytics, no cookies.</li>
+    </ul>
+
+    <h2>The CLI and MCP server</h2>
+    <p>
+      <code>trelly</code> and <code>trelly-mcp</code> (installed separately via npm or
+      Homebrew) run locally on your machine. Credentials live only in
+      <code>~/.config/trelly/config.json</code> (file mode 600). API requests go directly
+      to <code>api.trello.com</code>; the
+      <a class="plain" href="https://www.atlassian.com/legal/privacy-policy" target="_blank" rel="noopener">Atlassian privacy policy</a>
+      applies to that traffic. The package collects no analytics, crash reports, or usage metrics.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Issues and security reports:
+      <a class="plain" href="https://github.com/brandonkramer/trelly/issues" target="_blank" rel="noopener">github.com/brandonkramer/trelly/issues</a>
+      · Full policy:
+      <a class="plain" href="https://github.com/brandonkramer/trelly/blob/main/PRIVACY.md" target="_blank" rel="noopener">PRIVACY.md</a>
+      · License: MIT
+    </p>
+  </div>
+  <script>
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.body.classList.add("dark");
+    }
+  </script>
+</body>
+</html>
