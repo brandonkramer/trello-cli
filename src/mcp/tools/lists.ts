@@ -27,11 +27,18 @@ export function registerListTools(server: McpServer): void {
     "trello_list_cards",
     {
       description: "List cards in a list.",
-      inputSchema: { profile: profileField, listId: z.string().min(1) },
+      inputSchema: {
+        profile: profileField,
+        listId: z.string().min(1),
+        fields: z
+          .string()
+          .default("id,name,idList,due,dueComplete,shortUrl,closed")
+          .describe('comma-separated fields, "all" for everything'),
+      },
       annotations: { readOnlyHint: true },
       outputSchema,
     },
-    async ({ profile, listId }) =>
-      withClient(profile, (client) => client.listCards(listId)),
+    async ({ profile, listId, fields }) =>
+      withClient(profile, (client) => client.listCards(listId, { fields })),
   );
 }

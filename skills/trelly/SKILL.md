@@ -40,6 +40,7 @@ Credentials: `~/.config/trelly/config.json` (migrates from `~/.config/trello-cli
 | Pretty JSON | `--json --pretty` |
 
 - **Scripts:** always `--json` if parsing stdout.
+- **Token cost:** raw `--json` returns full Trello objects (a board list ≈ 10k tokens) — trim with `jq` (e.g. `| jq '.data[] | {id,name}'`) or request fewer fields (`--fields`, `--query "fields=id,name"`).
 - **`--pretty` alone** does not emit JSON; it only indents `--json` output.
 - Errors: red `✗` in human mode; exit code `1`.
 

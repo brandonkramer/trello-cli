@@ -25,7 +25,10 @@ export function registerBoardTools(server: McpServer): void {
           ])
           .optional()
           .default("open"),
-        fields: z.string().optional(),
+        fields: z
+          .string()
+          .default("id,name,shortUrl,closed")
+          .describe('comma-separated fields, "all" for everything'),
       },
       annotations: { readOnlyHint: true },
       outputSchema,
@@ -41,7 +44,10 @@ export function registerBoardTools(server: McpServer): void {
       inputSchema: {
         profile: profileField,
         boardId: z.string().min(1),
-        fields: z.string().optional(),
+        fields: z
+          .string()
+          .default("id,name,desc,shortUrl,closed")
+          .describe('comma-separated fields, "all" for everything'),
       },
       annotations: { readOnlyHint: true },
       outputSchema,
@@ -94,23 +100,34 @@ export function registerBoardTools(server: McpServer): void {
         profile: profileField,
         boardId: z.string().min(1),
         filter: z.string().optional().default("open"),
+        fields: z
+          .string()
+          .default("id,name,closed,pos")
+          .describe('comma-separated fields, "all" for everything'),
       },
       annotations: { readOnlyHint: true },
       outputSchema,
     },
-    async ({ profile, boardId, filter }) =>
-      withClient(profile, (client) => client.boardLists(boardId, { filter })),
+    async ({ profile, boardId, filter, fields }) =>
+      withClient(profile, (client) => client.boardLists(boardId, { filter, fields })),
   );
 
   server.registerTool(
     "trello_board_cards",
     {
       description: "List all cards on a board.",
-      inputSchema: { profile: profileField, boardId: z.string().min(1) },
+      inputSchema: {
+        profile: profileField,
+        boardId: z.string().min(1),
+        fields: z
+          .string()
+          .default("id,name,idList,due,dueComplete,shortUrl,closed")
+          .describe('comma-separated fields, "all" for everything'),
+      },
       annotations: { readOnlyHint: true },
       outputSchema,
     },
-    async ({ profile, boardId }) =>
-      withClient(profile, (client) => client.boardCards(boardId)),
+    async ({ profile, boardId, fields }) =>
+      withClient(profile, (client) => client.boardCards(boardId, { fields })),
   );
 }

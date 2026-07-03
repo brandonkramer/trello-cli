@@ -12,6 +12,9 @@ MCP server for Trello (npm package **trelly**, bin **`trelly-mcp`**). Returns JS
 envelope on every tool: `{ ok, profile, data }` /
 `{ ok: false, error, status?, details? }`. Never uses CLI human/Ink output.
 
+List/get tools default to lean `fields` (id, name, url, due, …) to keep responses
+token-cheap; pass `fields: "all"` or a comma list when you need more.
+
 ## Setup
 
 ### 1. Auth (CLI, once)
