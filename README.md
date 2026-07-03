@@ -220,6 +220,7 @@ Skills + IDE plugins ship in the npm package so agents learn CLI/MCP conventions
 | **Claude Code** | `claude plugin install "$(npm root -g)/trelly"` → reload |
 | **Cursor** | `cp -R "$(npm root -g)/trelly" ~/.cursor/plugins/local/trelly` → reload window |
 | **Codex** | Local marketplace → `/plugins` → install Trelly |
+| **Antigravity** | `agy plugin install "$(npm root -g)/trelly/.antigravity-plugin"` |
 
 ```bash
 npm install -g trelly && trelly auth setup && trelly auth login
