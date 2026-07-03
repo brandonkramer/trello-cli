@@ -8,8 +8,8 @@ function esc(text) {
   return div.innerHTML;
 }
 
-t.render(function () {
-  return t.card("id", "shortUrl", "badges", "attachments").then(function (card) {
+t.render(() =>
+  t.card("id", "shortUrl", "badges", "attachments").then((card) => {
     var badges = card.badges || {};
     var counts = [];
     counts.push("💬 " + (badges.comments || 0) + " comments");
@@ -18,14 +18,12 @@ t.render(function () {
       counts.push("✓ " + (badges.checkItemsChecked || 0) + "/" + badges.checkItems);
     }
     document.getElementById("counts").innerHTML = counts
-      .map(function (c) {
-        return "<span>" + c + "</span>";
-      })
+      .map((c) => "<span>" + c + "</span>")
       .join("");
 
     var list = (card.attachments || []).slice(0, 5);
     document.getElementById("attachments").innerHTML = list
-      .map(function (a) {
+      .map((a) => {
         var when = a.date ? " · " + a.date.slice(0, 10) : "";
         return (
           '<li><a href="' +
@@ -39,17 +37,17 @@ t.render(function () {
       })
       .join("");
 
-    document.getElementById("copy-url").onclick = function () {
-      copyText(card.shortUrl).then(function () {
+    document.getElementById("copy-url").onclick = () => {
+      copyText(card.shortUrl).then(() => {
         t.alert({ message: "Copied", duration: 2, display: "success" });
       });
     };
-    document.getElementById("copy-prompt").onclick = function () {
-      copyText(agentPrompt(card)).then(function () {
+    document.getElementById("copy-prompt").onclick = () => {
+      copyText(agentPrompt(card)).then(() => {
         t.alert({ message: "Copied", duration: 2, display: "success" });
       });
     };
 
     return t.sizeTo("#content");
-  });
-});
+  }),
+);
