@@ -51,6 +51,8 @@ Run all three checks before committing.
 - Branch `type/short-description` off `main`; one logical change per PR; say how
   you verified it
 - Never force-push `main`
+- Release: `npm version patch|minor|major && git push --follow-tags` — the `v*` tag
+  runs `release.yml` (npm publish with provenance → GitHub Release → tap bump)
 
 ## Agent skills
 

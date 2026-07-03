@@ -20,7 +20,7 @@ trelly auth setup    # once: API key from https://trello.com/power-ups/admin
 trelly auth login    # browser Allow → saves token
 ```
 
-From source: clone [brandonkramer/trello-cli](https://github.com/brandonkramer/trello-cli),
+From source: clone [brandonkramer/trelly](https://github.com/brandonkramer/trelly),
 `bun install`, then `./bin/trelly auth setup`.
 
 Auth notes (common confusion):
