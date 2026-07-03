@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <link rel="stylesheet" href="./css/style.css" />
@@ -8,12 +8,12 @@
   <div id="content">
     <h2>1 · Install trelly</h2>
     <pre id="install">npm install -g trelly   # or: brew install brandonkramer/tap/trelly</pre>
-    <div class="copybar"><button data-copy="install">Copy</button></div>
+    <div class="copybar"><button type="button" data-copy="install">Copy</button></div>
 
     <h2>2 · Log in once</h2>
     <pre id="auth">trelly auth setup
 trelly auth login</pre>
-    <div class="copybar"><button data-copy="auth">Copy</button></div>
+    <div class="copybar"><button type="button" data-copy="auth">Copy</button></div>
 
     <h2>3 · Wire your agent (Cursor / Claude)</h2>
     <p class="muted">Add to <code>~/.cursor/mcp.json</code> or your Claude MCP config:</p>
@@ -21,7 +21,7 @@ trelly auth login</pre>
   "command": "trelly-mcp",
   "env": { "TRELLO_PROFILE": "default" }
 }</pre>
-    <div class="copybar"><button data-copy="mcp">Copy</button></div>
+    <div class="copybar"><button type="button" data-copy="mcp">Copy</button></div>
 
     <p>
       Your agent can now list boards, move cards, comment, and attach PRs on this board.

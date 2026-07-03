@@ -2,18 +2,18 @@
 
 var t = TrelloPowerUp.iframe();
 
-document.querySelectorAll("button[data-copy]").forEach(function (button) {
-  button.addEventListener("click", function () {
+document.querySelectorAll("button[data-copy]").forEach((button) => {
+  button.addEventListener("click", () => {
     var text = document.getElementById(button.dataset.copy).textContent;
-    copyText(text).then(function () {
+    copyText(text).then(() => {
       button.textContent = "Copied ✓";
-      setTimeout(function () {
+      setTimeout(() => {
         button.textContent = "Copy";
       }, 1500);
     });
   });
 });
 
-t.render(function () {
-  t.sizeTo("#content").catch(function () {});
+t.render(() => {
+  t.sizeTo("#content").catch(() => {});
 });

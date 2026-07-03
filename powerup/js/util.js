@@ -2,9 +2,7 @@
 
 function copyText(text) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    return navigator.clipboard.writeText(text).catch(function () {
-      return copyFallback(text);
-    });
+    return navigator.clipboard.writeText(text).catch(() => copyFallback(text));
   }
   return Promise.resolve(copyFallback(text));
 }
