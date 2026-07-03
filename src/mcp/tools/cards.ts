@@ -1,6 +1,11 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { profileField, toolEnvelopeSchema, withClient } from "../handlers.ts";
+import {
+  profileField,
+  slimCards,
+  toolEnvelopeSchema,
+  withClient,
+} from "../handlers.ts";
 
 export function registerCardTools(server: McpServer): void {
   const outputSchema = toolEnvelopeSchema;
@@ -14,14 +19,16 @@ export function registerCardTools(server: McpServer): void {
         cardId: z.string().min(1),
         fields: z
           .string()
-          .default("id,name,desc,due,dueComplete,idList,shortUrl,labels")
+          .default("id,name,desc,due,dueComplete,idList,shortUrl,labels,badges")
           .describe('comma-separated fields, "all" for everything'),
       },
       annotations: { readOnlyHint: true },
       outputSchema,
     },
     async ({ profile, cardId, fields }) =>
-      withClient(profile, (client) => client.cardGet(cardId, { fields })),
+      withClient(profile, async (client) =>
+        slimCards(await client.cardGet(cardId, { fields })),
+      ),
   );
 
   server.registerTool(

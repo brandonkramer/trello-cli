@@ -14,6 +14,25 @@ envelope on every tool: `{ ok, profile, data }` /
 
 List/get tools default to lean `fields` (id, name, url, due, …) to keep responses
 token-cheap; pass `fields: "all"` or a comma list when you need more.
+`trello_list_cards` and `trello_card_get` also include slim `badges`
+(comments/attachments/checkItems counts) and `labels` for rich rendering.
+
+## Rendering card lists for humans
+
+When the user asks to **see** cards (not automation), render one markdown line per
+card — title linked to the card, then only the badges that are non-zero:
+
+```
+1. [Example card](https://trello.com/c/example123) 🔴 `Priority: Highest` · 💬 4 · 📎 2 · ✓ 2/5 · ⏰ Jul 5
+```
+
+- Title → `[name](shortUrl)`. Counts from `badges`: 💬 comments · 📎 attachments · ✓ checkItemsChecked/checkItems.
+- Due: `⏰ Jul 5`, add `(overdue)` if past and not `dueComplete`; `✓` if complete.
+- Labels: colored dot + name in backticks. Trello color → emoji: red 🔴 · orange 🟠 · yellow 🟡 · green/lime 🟢 · blue/sky 🔵 · purple/pink 🟣 · black ⚫ · none ⚪.
+- Whole board: add `fields: "…,badges,labels"` to `trello_board_cards` (lean by default).
+- Custom-field chips (e.g. `Priority: Highest`): fetch defs once via `trello_api` GET
+  `/boards/{boardId}/customFields`, request `customFieldItems` on cards, match
+  `idValue` → option text/color. Skip unless the user wants them — it's an extra call.
 
 ## Setup
 

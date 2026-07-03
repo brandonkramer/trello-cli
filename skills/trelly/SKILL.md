@@ -41,6 +41,7 @@ Credentials: `~/.config/trelly/config.json` (migrates from `~/.config/trello-cli
 
 - **Scripts:** always `--json` if parsing stdout.
 - **Token cost:** raw `--json` returns full Trello objects (a board list ≈ 10k tokens) — trim with `jq` (e.g. `| jq '.data[] | {id,name}'`) or request fewer fields (`--fields`, `--query "fields=id,name"`).
+- **Showing cards to a human?** Render one markdown line per card: `[name](shortUrl)` + non-zero badges `💬 n · 📎 n · ✓ x/y · ⏰ due` + labels as colored dots (red 🔴 orange 🟠 yellow 🟡 green 🟢 blue 🔵 purple 🟣). Slim the JSON first: `jq '.data[] | {name, shortUrl, labels: [.labels[] | {name, color}], badges: {comments: .badges.comments, attachments: .badges.attachments, checkItems: .badges.checkItems, checkItemsChecked: .badges.checkItemsChecked}, due, dueComplete}'`.
 - **`--pretty` alone** does not emit JSON; it only indents `--json` output.
 - Errors: red `✗` in human mode; exit code `1`.
 
