@@ -12,6 +12,7 @@ import { registerListCommands } from "./commands/lists.ts";
 import { registerMemberCommands } from "./commands/members.ts";
 import { registerOrgCommands } from "./commands/orgs.ts";
 import { registerSearchCommands } from "./commands/search.ts";
+import { registerUiCommand } from "./commands/ui.ts";
 import { registerWebhookCommands } from "./commands/webhooks.ts";
 
 const program = new Command();
@@ -36,6 +37,7 @@ registerMemberCommands(program);
 registerOrgCommands(program);
 registerActionCommands(program);
 registerApiCommand(program);
+registerUiCommand(program);
 
 program.parseAsync(process.argv).catch((err) => {
   console.error(err instanceof Error ? err.message : err);

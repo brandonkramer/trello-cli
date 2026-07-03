@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import { parseTrelloResponse, trelloErrorMessage } from "./api/http.ts";
 import { authLoginUrl } from "./auth/profiles.ts";
 import { parseKvPairs } from "./cli/context.ts";
+import { dueStatus, labelHex } from "./cli/ui/palette.ts";
 
 describe("parseKvPairs", () => {
   it("parses key=value pairs", () => {
@@ -47,5 +48,23 @@ describe("trello HTTP helpers", () => {
       "invalid token",
     );
     assert.equal(trelloErrorMessage(null, 500), "Trello API 500");
+  });
+});
+
+describe("ui palette", () => {
+  it("maps Trello label colors including shades", () => {
+    assert.equal(labelHex("green"), "#61bd4f");
+    assert.equal(labelHex("green_dark"), "#61bd4f");
+    assert.equal(labelHex(null), "#6b778c");
+    assert.equal(labelHex("mauve"), "#6b778c");
+  });
+
+  it("classifies due status", () => {
+    const now = new Date("2026-07-03T12:00:00Z");
+    assert.equal(dueStatus(null, false, now), "none");
+    assert.equal(dueStatus("2026-07-01T00:00:00Z", true, now), "complete");
+    assert.equal(dueStatus("2026-07-01T00:00:00Z", false, now), "overdue");
+    assert.equal(dueStatus("2026-07-03T18:00:00Z", false, now), "soon");
+    assert.equal(dueStatus("2026-08-01T00:00:00Z", false, now), "later");
   });
 });
