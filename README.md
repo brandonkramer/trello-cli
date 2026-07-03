@@ -119,7 +119,7 @@ Top-level: `auth` · `boards` · `lists` · `cards` · `checklists` · `labels` 
 | **auth** | `setup` · `login` · `list` · `use` · `logout` · `url` |
 | **boards** | `list` · `get` · `create` · `update` · `archive` · `delete` · `lists` · `cards` · `labels` · `members` · `actions` · `custom-fields` |
 | **lists** | `get` · `create` · `update` · `archive` · `cards` |
-| **cards** | `get` · `list` · `create` · `update` · `move` · `comments` · `comment` · `archive` · `delete` · `members` · `add-member` · `remove-member` · `labels` · `add-label` · `remove-label` · `actions` · `attachments` · `add-attachment` · `custom-fields` |
+| **cards** | `get` · `list` · `create` · `update` · `move` · `comments` · `comment` · `archive` · `delete` · `members` · `add-member` · `remove-member` · `labels` · `add-label` · `remove-label` · `actions` · `attachments` · `add-attachment` · `delete-attachment` · `custom-fields` |
 | **checklists** | `get` · `create` · `update` · `delete` · `add-item` · `update-item` · `delete-item` |
 | **labels** | `get` · `create` · `update` · `delete` |
 | **custom-fields** | `get` · `create` · `update` · `delete` · `set-item` |
@@ -192,7 +192,21 @@ bun run typecheck && bun test && bun run lint
 
 CI runs the same via `bun install --frozen-lockfile`. See `AGENTS.md` for conventions.
 
-**Agent skills:** [skills/](skills/README.md) — portable `SKILL.md` files for Cursor, Claude, Pi, Codex (`trelly`, `trelly-mcp`).
+## Agent skills & plugins
+
+Shipped in the npm package for **end users** who install trelly globally — not for repo
+development. See [skills/README.md](skills/README.md).
+
+```bash
+npm install -g trelly
+trelly auth setup && trelly auth login
+
+pi install npm:trelly
+claude plugin install "$(npm root -g)/trelly"
+ln -sf "$(npm root -g)/trelly" ~/.cursor/plugins/local/trelly   # Cursor plugin
+```
+
+MCP-only (no plugin): add `trelly-mcp` to `~/.cursor/mcp.json` — [mcp.example.json](mcp.example.json).
 
 ## License
 

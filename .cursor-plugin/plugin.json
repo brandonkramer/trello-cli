@@ -1,0 +1,8 @@
+{
+  "name": "trelly",
+  "displayName": "Trelly",
+  "description": "Trello CLI + MCP tools — boards, lists, cards, search via trelly-mcp",
+  "version": "0.1.1",
+  "mcpServers": "mcp.json",
+  "skills": "./skills/"
+}

@@ -56,5 +56,6 @@ Run all three checks before committing.
 
 ## Agent skills
 
-Portable skills for Cursor, Claude Code, Pi, Codex: [`skills/`](skills/README.md)
-(`trelly`, `trelly-mcp`). Cursor: symlink under `.cursor/skills/`.
+End-user skills/plugins ship in the npm tarball — see [`skills/README.md`](skills/README.md).
+Repo contributors: edit `skills/`; manifests at `.claude-plugin/`, `.cursor-plugin/`,
+`package.json` `"pi"`.

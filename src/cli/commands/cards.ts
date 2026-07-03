@@ -1,6 +1,21 @@
+import { readFileSync } from "node:fs";
+import { basename, extname } from "node:path";
 import type { Command } from "commander";
 import { getClient, parseJsonFlag, parseKvPairs } from "../context.ts";
 import { rootOpts, run } from "./run.ts";
+
+const ATTACHMENT_MIME: Record<string, string> = {
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".gif": "image/gif",
+  ".webp": "image/webp",
+  ".svg": "image/svg+xml",
+  ".pdf": "application/pdf",
+  ".txt": "text/plain",
+  ".md": "text/markdown",
+  ".json": "application/json",
+};
 
 export function registerCardCommands(program: Command): void {
   const cards = program.command("cards").description("Card operations");
@@ -176,12 +191,38 @@ export function registerCardCommands(program: Command): void {
 
   cards
     .command("add-attachment <id>")
-    .requiredOption("--url <url>", "Attachment URL")
+    .option("--url <url>", "Attachment URL")
+    .option("--file <path>", "Local file to upload")
     .option("--name <name>", "Attachment name")
     .action((id, opts, cmd) =>
       run(cmd, async () => {
         const { client } = getClient(rootOpts(cmd).profile);
+        if (!opts.url === !opts.file) {
+          throw new Error("Pass exactly one of --url or --file");
+        }
+        if (opts.file) {
+          const type =
+            ATTACHMENT_MIME[extname(opts.file).toLowerCase()] ??
+            "application/octet-stream";
+          const form = new FormData();
+          form.append(
+            "file",
+            new Blob([readFileSync(opts.file)], { type }),
+            opts.name ?? basename(opts.file),
+          );
+          return client.cardUploadAttachment(id, form);
+        }
         return client.cardAddAttachment(id, { url: opts.url, name: opts.name });
+      }),
+    );
+
+  cards
+    .command("delete-attachment <id> <attachmentId>")
+    .description("Delete an attachment from a card")
+    .action((id, attachmentId, _opts, cmd) =>
+      run(cmd, async () => {
+        const { client } = getClient(rootOpts(cmd).profile);
+        return client.cardDeleteAttachment(id, attachmentId);
       }),
     );
 

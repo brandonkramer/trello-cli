@@ -71,7 +71,7 @@ export function registerBoardCommands(program: Command): void {
   boards
     .command("archive <id>")
     .description("Close (archive) a board — reversible in Trello UI")
-    .action((id, cmd) =>
+    .action((id, _opts, cmd) =>
       run(cmd, async () => {
         const { client } = getClient(rootOpts(cmd).profile);
         return client.boardArchive(id);
@@ -81,7 +81,7 @@ export function registerBoardCommands(program: Command): void {
   boards
     .command("delete <id>")
     .description("Permanently delete a board — irreversible")
-    .action((id, cmd) =>
+    .action((id, _opts, cmd) =>
       run(cmd, async () => {
         const { client } = getClient(rootOpts(cmd).profile);
         return client.boardDelete(id);
@@ -102,7 +102,7 @@ export function registerBoardCommands(program: Command): void {
   boards
     .command("cards <boardId>")
     .description("List cards on a board")
-    .action((boardId, cmd) =>
+    .action((boardId, _opts, cmd) =>
       run(cmd, async () => {
         const { client } = getClient(rootOpts(cmd).profile);
         return client.boardCards(boardId);
@@ -112,7 +112,7 @@ export function registerBoardCommands(program: Command): void {
   boards
     .command("labels <boardId>")
     .description("List labels on a board")
-    .action((boardId, cmd) =>
+    .action((boardId, _opts, cmd) =>
       run(cmd, async () => {
         const { client } = getClient(rootOpts(cmd).profile);
         return client.boardLabels(boardId);
@@ -122,7 +122,7 @@ export function registerBoardCommands(program: Command): void {
   boards
     .command("members <boardId>")
     .description("List board members")
-    .action((boardId, cmd) =>
+    .action((boardId, _opts, cmd) =>
       run(cmd, async () => {
         const { client } = getClient(rootOpts(cmd).profile);
         return client.boardMembers(boardId);
@@ -143,7 +143,7 @@ export function registerBoardCommands(program: Command): void {
   boards
     .command("custom-fields <boardId>")
     .description("List custom field definitions")
-    .action((boardId, cmd) =>
+    .action((boardId, _opts, cmd) =>
       run(cmd, async () => {
         const { client } = getClient(rootOpts(cmd).profile);
         return client.boardCustomFields(boardId);

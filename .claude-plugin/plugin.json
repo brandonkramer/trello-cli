@@ -1,0 +1,15 @@
+{
+  "name": "trelly",
+  "version": "0.1.1",
+  "description": "Trello CLI + MCP tools — boards, lists, cards, search, and raw API via trelly-mcp",
+  "author": {
+    "name": "brandonkramer",
+    "url": "https://github.com/brandonkramer"
+  },
+  "homepage": "https://github.com/brandonkramer/trelly#readme",
+  "repository": "https://github.com/brandonkramer/trelly",
+  "license": "MIT",
+  "keywords": ["trello", "trelly", "mcp", "kanban"],
+  "skills": ["./skills"],
+  "mcpServers": "./.mcp.json"
+}

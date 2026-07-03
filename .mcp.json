@@ -1,0 +1,8 @@
+{
+  "trelly": {
+    "command": "${CLAUDE_PLUGIN_ROOT}/bin/trelly-mcp",
+    "env": {
+      "TRELLO_PROFILE": "default"
+    }
+  }
+}

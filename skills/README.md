@@ -1,70 +1,70 @@
-# trelly agent skills
+# trelly agent skills & plugins
 
-Portable skills for AI agents (Cursor, Claude Code, Pi, Codex, etc.). Each skill is a
-directory with a `SKILL.md` file (YAML frontmatter + markdown body).
+These ship **inside the npm package** (`npm install -g trelly`). They teach your AI agent
+how to use the CLI and MCP — for anyone using trelly on their machine, not for people
+developing this repo.
 
 | Skill | Use when |
 |-------|----------|
-| [trelly](trelly/SKILL.md) | Running or scripting the CLI (`trelly boards list`, auth, `--json`) |
-| [trelly-mcp](trelly-mcp/SKILL.md) | Configuring or using the MCP server and Trello tools in an IDE agent |
+| [trelly](trelly/SKILL.md) | Terminal / bash: `trelly boards list`, auth, `--json` |
+| [trelly-mcp](trelly-mcp/SKILL.md) | IDE agent with MCP wired: tool names, envelopes, safety |
 
-## Install
+**One copy of the content:** `skills/trelly/` and `skills/trelly-mcp/` in the installed
+package. Plugins and Pi load from there — you don't maintain separate copies.
 
-**Source of truth:** this `skills/` folder in the repo.
-
-### Cursor (project)
-
-Symlink into `.cursor/skills/`:
+## Prerequisite
 
 ```bash
-mkdir -p .cursor/skills
-ln -sf ../../skills/trelly .cursor/skills/trelly
-ln -sf ../../skills/trelly-mcp .cursor/skills/trelly-mcp
+npm install -g trelly    # or: brew install brandonkramer/tap/trelly
+trelly auth setup
+trelly auth login
 ```
 
-Or copy the skill folders instead of symlinking.
-
-### Cursor (global)
+## Pi
 
 ```bash
-ln -sf ~/dev/trello-cli/skills/trelly ~/.cursor/skills/trelly
-ln -sf ~/dev/trello-cli/skills/trelly-mcp ~/.cursor/skills/trelly-mcp
+pi install npm:trelly
 ```
 
-### Claude Code (project)
+Loads both skills from the package manifest (`package.json` → `"pi": { "skills": ["./skills"] }`).
+Pi has no built-in MCP — use the **trelly** skill for CLI/bash, or wire MCP in Cursor/Claude
+below.
+
+## Claude Code
+
+Install the plugin from your global npm package (skills + MCP in one step):
 
 ```bash
-mkdir -p .claude/skills
-ln -sf ../../skills/trelly .claude/skills/trelly
-ln -sf ../../skills/trelly-mcp .claude/skills/trelly-mcp
+claude plugin install "$(npm root -g)/trelly"
 ```
 
-### Claude Code (global)
+Reload Claude Code. The plugin starts `trelly-mcp` and loads `skills/trelly` +
+`skills/trelly-mcp`.
+
+**MCP only** (no plugin skills): add to your Claude MCP config using `trelly-mcp` on PATH
+(see [trelly-mcp/SKILL.md](trelly-mcp/SKILL.md)).
+
+## Cursor
+
+**Plugin (skills + MCP):**
 
 ```bash
-ln -sf ~/dev/trello-cli/skills/trelly ~/.claude/skills/trelly
-ln -sf ~/dev/trello-cli/skills/trelly-mcp ~/.claude/skills/trelly-mcp
+mkdir -p ~/.cursor/plugins/local
+ln -sf "$(npm root -g)/trelly" ~/.cursor/plugins/local/trelly
 ```
 
-### Pi
+Restart Cursor / reload MCP.
 
-Add skill paths to your Pi config, or symlink into the skills directory your Pi setup
-reads (often `~/.agents/lazy-skills/` or project-local `.pi/skills/`):
+**MCP only:** copy [mcp.example.json](../mcp.example.json) into `~/.cursor/mcp.json`.
 
-```bash
-ln -sf ~/dev/trello-cli/skills/trelly ~/.agents/lazy-skills/trelly
-ln -sf ~/dev/trello-cli/skills/trelly-mcp ~/.agents/lazy-skills/trelly-mcp
-```
+## What each piece does
 
-Adjust the target to match your Pi layout.
+| Piece | Role |
+|-------|------|
+| `skills/` | Agent instructions (CLI vs MCP, auth, safety) — **the content** |
+| `.claude-plugin/` + `.mcp.json` | Claude Code plugin manifest + MCP wiring |
+| `.cursor-plugin/` | Cursor plugin manifest + MCP wiring |
+| `package.json` `"pi"` | Pi package manifest (skills path) |
 
-### Codex / other agents
-
-- Point the agent at `skills/trelly/SKILL.md` or `skills/trelly-mcp/SKILL.md`, or
-- Rely on repo-root [AGENTS.md](../AGENTS.md) for development conventions (Codex often
-  reads AGENTS.md automatically).
-
-## MCP config (separate from skills)
-
-Skills teach agents *how* to use trelly. MCP wiring is in `~/.cursor/mcp.json` —
-see [trelly-mcp/SKILL.md](trelly-mcp/SKILL.md) and [mcp.example.json](../mcp.example.json).
+Skills tell the agent *how* to use trelly. MCP config tells the IDE *how to spawn*
+`trelly-mcp`. After `npm install -g trelly`, both bins are on PATH.

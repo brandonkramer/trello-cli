@@ -11,8 +11,14 @@
     "trelly",
     "mcp",
     "kanban",
-    "automation"
+    "automation",
+    "pi-package"
   ],
+  "pi": {
+    "skills": [
+      "./skills"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/brandonkramer/trelly.git"
@@ -26,7 +32,11 @@
   ],
   "files": [
     "bin/",
-    "src/"
+    "src/",
+    "skills/",
+    ".claude-plugin/",
+    ".cursor-plugin/",
+    ".mcp.json"
   ],
   "bin": {
     "trelly": "./bin/trelly",

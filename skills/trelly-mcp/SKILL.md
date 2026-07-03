@@ -22,7 +22,16 @@ trelly auth login
 trelly auth list
 ```
 
-### 2. Cursor — `~/.cursor/mcp.json`
+### 2. Cursor — plugin or `~/.cursor/mcp.json`
+
+**Plugin (skills + MCP):** after `npm install -g trelly`:
+
+```bash
+mkdir -p ~/.cursor/plugins/local
+ln -sf "$(npm root -g)/trelly" ~/.cursor/plugins/local/trelly
+```
+
+**MCP only** — `~/.cursor/mcp.json`:
 
 ```json
 {
@@ -37,8 +46,7 @@ trelly auth list
 }
 ```
 
-After `npm install -g trelly`, `trelly-mcp` is on PATH. From a clone, use the full path
-to `bin/trelly-mcp`. See [mcp.example.json](../../mcp.example.json).
+See [mcp.example.json](../../mcp.example.json).
 
 ### 3. Restart the IDE
 

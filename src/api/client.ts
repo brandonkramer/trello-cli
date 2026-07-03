@@ -28,7 +28,7 @@ export class TrelloClient {
     method: string,
     path: string,
     query: Query = {},
-    body?: JsonValue,
+    body?: JsonValue | FormData,
   ): Promise<T> {
     const url = new URL(`${this.base}${path.startsWith("/") ? path : `/${path}`}`);
 
@@ -43,7 +43,9 @@ export class TrelloClient {
     };
 
     const init: RequestInit = { method, headers };
-    if (body !== undefined) {
+    if (body instanceof FormData) {
+      init.body = body; // fetch sets the multipart boundary
+    } else if (body !== undefined) {
       headers["Content-Type"] = "application/json";
       init.body = JSON.stringify(body);
     }
@@ -63,7 +65,11 @@ export class TrelloClient {
     return this.request("GET", path, query);
   }
 
-  post<T = JsonValue>(path: string, query?: Query, body?: JsonValue): Promise<T> {
+  post<T = JsonValue>(
+    path: string,
+    query?: Query,
+    body?: JsonValue | FormData,
+  ): Promise<T> {
     return this.request("POST", path, query, body);
   }
 
@@ -216,6 +222,15 @@ export class TrelloClient {
 
   cardAddAttachment(id: string, query: Query) {
     return this.post(`/cards/${id}/attachments`, query);
+  }
+
+  /** Upload a local file as a card attachment (multipart). */
+  cardUploadAttachment(id: string, form: FormData) {
+    return this.post(`/cards/${id}/attachments`, {}, form);
+  }
+
+  cardDeleteAttachment(id: string, attachmentId: string) {
+    return this.delete(`/cards/${id}/attachments/${attachmentId}`);
   }
 
   cardCustomFieldItems(id: string) {
