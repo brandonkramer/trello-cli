@@ -1,8 +1,12 @@
 /* Shared helpers for trelly Power-Up iframes. */
 
 function applyTheme(t) {
-  var theme = (t.getContext() || {}).theme;
-  document.body.classList.toggle("dark", theme === "dark");
+  try {
+    var theme = (t.getContext() || {}).theme;
+    document.body.classList.toggle("dark", theme === "dark");
+  } catch (_err) {
+    // theme is cosmetic — never let it block the page
+  }
 }
 
 function copyText(text) {
