@@ -1,4 +1,4 @@
-# trelly ~ trello CLI
+# Trelly -- Trello CLI
 
 Fast Trello CLI + MCP server ([npm](https://www.npmjs.com/package/trelly): `npm install -g trelly`).
 **Human, Trello-styled output by default**; add `--json` for scripts and automation.
@@ -9,13 +9,13 @@ Commands: **`trelly`** (CLI) and **`trelly-mcp`** (MCP server).
 Boards, lists, cards, checklists, labels, custom fields, search, webhooks, multi-profile
 auth, interactive kanban TUI, raw `trelly api` escape hatch.
 
-## Quick start
+## Install
 
 ```bash
-npm install -g trelly   # or: brew install brandonkramer/tap/trelly · bunx trelly · npx trelly
-trelly auth setup    # once: API key from power-ups/admin
-trelly auth login    # browser → Allow
-trelly boards list
+npm install -g trelly                   # npm (Node 22+)
+brew install brandonkramer/tap/trelly   # Homebrew
+bunx trelly                             # run without installing (Bun)
+npx trelly                              # run without installing (Node 22+)
 ```
 
 From source (repo [brandonkramer/trelly](https://github.com/brandonkramer/trelly)):
@@ -31,6 +31,14 @@ bun install
 No Bun? `npm install` in the clone — tsx is the fallback runtime.
 
 Optional: `bun link` / `npm link`, or add `bin/` to `PATH`.
+
+## Quick start
+
+```bash
+trelly auth setup    # once: API key from power-ups/admin
+trelly auth login    # browser → Allow
+trelly boards list
+```
 
 ## Output
 
