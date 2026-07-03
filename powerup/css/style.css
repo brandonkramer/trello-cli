@@ -80,33 +80,6 @@ button.primary:hover {
   font-size: 12px;
 }
 
-.counts {
-  margin-bottom: 8px;
-  font-size: 13px;
-}
-.counts span {
-  margin-right: 12px;
-}
-
-ul.attachments {
-  list-style: none;
-  margin: 4px 0 8px;
-}
-ul.attachments li {
-  padding: 3px 0;
-  font-size: 13px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-ul.attachments a {
-  color: var(--link);
-  text-decoration: none;
-}
-ul.attachments a:hover {
-  text-decoration: underline;
-}
-
 h1 {
   font-size: 20px;
   margin: 0 0 10px;
