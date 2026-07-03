@@ -2,12 +2,12 @@
 
 Fast Trello CLI + MCP server ([npm](https://www.npmjs.com/package/trelly): `npm install -g trelly`).
 **Human, Trello-styled output by default**; add `--json` for scripts and automation.
-Commands: **`trello`** or **`trelly`** (same binary).
+Commands: **`trelly`** (CLI) and **`trelly-mcp`** (MCP server).
 
 ![trelly interactive UI](cli.gif)
 
 Boards, lists, cards, checklists, labels, custom fields, search, webhooks, multi-profile
-auth, interactive kanban TUI, raw `trello api` escape hatch.
+auth, interactive kanban TUI, raw `trelly api` escape hatch.
 
 ## Quick start
 
@@ -23,9 +23,9 @@ From source (repo [brandonkramer/trello-cli](https://github.com/brandonkramer/tr
 ```bash
 git clone https://github.com/brandonkramer/trello-cli.git && cd trello-cli
 bun install
-./bin/trello auth setup
-./bin/trello auth login
-./bin/trello boards list
+./bin/trelly auth setup
+./bin/trelly auth login
+./bin/trelly boards list
 ```
 
 No Bun? `npm install` in the clone — tsx is the fallback runtime.
@@ -36,9 +36,9 @@ Optional: `bun link` / `npm link`, or add `bin/` to `PATH`.
 
 | Mode | Command | stdout |
 |------|---------|--------|
-| Default | `trello boards list` | Styled rows (labels, due badges, etc.) |
-| JSON | `trello --json boards list` | `{ ok, profile, data }` |
-| Pretty JSON | `trello --json --pretty boards list` | Indented envelope |
+| Default | `trelly boards list` | Styled rows (labels, due badges, etc.) |
+| JSON | `trelly --json boards list` | `{ ok, profile, data }` |
+| Pretty JSON | `trelly --json --pretty boards list` | Indented envelope |
 
 - **Errors:** red `✗ message` in human mode, exit code `1` (use `--json` for `{ ok: false, ... }`).
 - **Pipes:** colors auto-disable when stdout is not a TTY.
@@ -46,12 +46,12 @@ Optional: `bun link` / `npm link`, or add `bin/` to `PATH`.
 
 ## Interactive UI
 
-Bare **`trello`** / **`trelly`** (no subcommand) opens the Ink kanban board in your terminal — same as `trello ui`.
+Bare **`trelly`** (no subcommand) opens the Ink kanban board in your terminal — same as `trelly ui`.
 
 ```bash
-trello              # board picker when no id given
-trello ui           # same
-trello ui BOARD_ID  # jump straight to a board
+trelly              # board picker when no id given
+trelly ui           # same
+trelly ui BOARD_ID  # jump straight to a board
 ```
 
 Requires a TTY. Keys: **arrows** / **hjkl** move focus, **Enter** card detail, **r** refresh, **q** / **Esc** back or quit.
@@ -82,8 +82,7 @@ Non-interactive: `trelly auth setup --api-key KEY` then `trelly auth login --api
 
 Environment override: `TRELLO_APP_API_KEY`, `TRELLO_API_KEY`, `TRELLO_TOKEN`, `TRELLO_PROFILE`.
 
-Credentials: `~/.config/trelly/config.json` (mode `600`). Migrates automatically from
-`~/.config/trello-cli/config.json` on next save.
+Credentials: `~/.config/trelly/config.json` (mode `600`).
 
 ## Usage
 
@@ -134,12 +133,12 @@ Add to `~/.cursor/mcp.json` (see `mcp.example.json`):
 
 ```json
 "trelly": {
-  "command": "trello-mcp",
+  "command": "trelly-mcp",
   "env": { "TRELLO_PROFILE": "default" }
 }
 ```
 
-After `npm install -g trelly`, `trello-mcp` is on your PATH. From a clone, use the full path to `bin/trello-mcp`.
+After `npm install -g trelly`, `trelly-mcp` is on your PATH. From a clone, use the full path to `bin/trelly-mcp`.
 
 Stdio server — JSON envelope on every tool (`{ ok, profile, data }`), never CLI human output. Pass **`profile`** on any tool for a non-default account. Prefer **`trello_*_archive`** over **`trello_card_delete`** (permanent; no board-delete MCP tool).
 

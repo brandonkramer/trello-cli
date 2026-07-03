@@ -285,7 +285,7 @@ function ProfilesView({ data }: { data: Rec }) {
   return (
     <Box flexDirection="column">
       {profiles.length === 0 ? (
-        <Text dimColor>No profiles. Run: trello auth login</Text>
+        <Text dimColor>No profiles. Run: trelly auth login</Text>
       ) : (
         profiles.map((p) => (
           <Text key={String(p.name)}>

@@ -1,7 +1,7 @@
 # AGENTS.md
 
-**trelly** — Trello CLI + MCP stdio server (npm package `trelly`, bins `trello` /
-`trelly`, `trello-mcp`). TypeScript, run with **Bun** (`bin/run-ts` falls back to
+**trelly** — Trello CLI + MCP stdio server (npm package `trelly`, bins `trelly` /
+`trelly-mcp`). TypeScript, run with **Bun** (`bin/run-ts` falls back to
 tsx/Node; CI runs the same checks on Bun). Output is human/Trello-styled by default
 (ink, `src/cli/ui/static.tsx`); the `--json` flag prints the envelope
 `{ ok, profile, data }` / `{ ok: false, error, status?, details? }` (`--pretty`
@@ -14,7 +14,7 @@ indents it).
   `~/.config/trello-cli/`), loopback browser flow
 - `src/cli/` — commander program: `index.ts`, `context.ts`, `commands/`, `ui/` (ink kanban TUI)
 - `src/mcp/` — `server.ts`, `tools/` (tool registrations), `handlers.ts`
-- `bin/` — bash launchers: `trello`, `trello-mcp`
+- `bin/` — bash launchers: `trelly`, `trelly-mcp`
 
 ## Commands
 
@@ -23,7 +23,7 @@ bun install
 bun run typecheck   # tsc --noEmit
 bun test
 bun run lint        # biome check .
-./bin/trello --help
+./bin/trelly --help
 ```
 
 Run all three checks before committing.

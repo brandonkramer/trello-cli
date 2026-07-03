@@ -29,19 +29,18 @@
     "src/"
   ],
   "bin": {
-    "trello": "./bin/trello",
-    "trelly": "./bin/trello",
-    "trello-mcp": "./bin/trello-mcp"
+    "trelly": "./bin/trelly",
+    "trelly-mcp": "./bin/trelly-mcp"
   },
   "scripts": {
-    "trello": "bun src/cli/index.ts",
+    "trelly": "bun src/cli/index.ts",
     "mcp": "bun src/mcp/server.ts",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "lint": "biome check .",
     "fmt": "biome format --write .",
     "fmt:check": "biome check .",
-    "postinstall": "chmod +x bin/trello bin/trello-mcp bin/run-ts 2>/dev/null || true",
+    "postinstall": "chmod +x bin/trelly bin/trelly-mcp bin/run-ts 2>/dev/null || true",
     "prepublishOnly": "bun run typecheck && bun test && bun run lint"
   },
   "engines": {

@@ -21,7 +21,7 @@ trelly auth login    # browser Allow → saves token
 ```
 
 From source: clone [brandonkramer/trello-cli](https://github.com/brandonkramer/trello-cli),
-`bun install`, then `./bin/trello auth setup`.
+`bun install`, then `./bin/trelly auth setup`.
 
 Auth notes (common confusion):
 
@@ -102,4 +102,4 @@ Env override: `TRELLO_APP_API_KEY`, `TRELLO_API_KEY`, `TRELLO_TOKEN`, `TRELLO_PR
 ## MCP vs CLI
 
 - **CLI:** human or `--json` on stdout.
-- **MCP:** separate stdio server (`trello-mcp`) — see **trelly-mcp** skill.
+- **MCP:** separate stdio server (`trelly-mcp`) — see **trelly-mcp** skill.

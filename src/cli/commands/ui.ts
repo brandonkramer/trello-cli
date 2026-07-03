@@ -12,7 +12,7 @@ export async function launchUi(
   const root = rootOpts(cmd);
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
     printResult(
-      failure("interactive mode requires a terminal — run trello --help for commands"),
+      failure("interactive mode requires a terminal — run trelly --help for commands"),
       root,
     );
     process.exitCode = 1;

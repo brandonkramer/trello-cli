@@ -18,8 +18,8 @@ import { registerWebhookCommands } from "./commands/webhooks.ts";
 const program = new Command();
 
 program
-  .name("trello")
-  .description("trelly — Trello CLI; bare `trello` opens the interactive board UI")
+  .name("trelly")
+  .description("trelly — Trello CLI; bare `trelly` opens the interactive board UI")
   .version(packageVersion())
   .option("-p, --profile <name>", "Auth profile (or TRELLO_PROFILE env)")
   .option("--json", "Output the raw JSON envelope", false)

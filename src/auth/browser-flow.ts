@@ -46,7 +46,7 @@ function callbackCaptureHtml(state: string): string {
       }
 
       if (!token) {
-        status.textContent = "No token in callback URL. Check allowed origins in trello auth setup.";
+        status.textContent = "No token in callback URL. Check allowed origins in trelly auth setup.";
         post("/callback/error", {
           error: "No token in callback fragment — add http://127.0.0.1:${DEFAULT_PORT} to allowed origins",
           state: state

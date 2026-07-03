@@ -67,7 +67,7 @@ One-time setup (per Trello account / Power-Up):
             message: "Saved app API key for trelly",
             configPath: configPath(),
             allowedOrigin: SETUP_ALLOWED_ORIGIN,
-            next: "Run: trello auth login",
+            next: "Run: trelly auth login",
           }),
           root,
         );
@@ -144,8 +144,8 @@ One-time setup (per Trello account / Power-Up):
               throw new Error(
                 `${result.error}\n` +
                   `If redirect was blocked, run:\n` +
-                  `  trello auth setup   # add ${SETUP_ALLOWED_ORIGIN} to allowed origins\n` +
-                  `  trello auth login --manual`,
+                  `  trelly auth setup   # add ${SETUP_ALLOWED_ORIGIN} to allowed origins\n` +
+                  `  trelly auth login --manual`,
               );
             }
             token = result.token;

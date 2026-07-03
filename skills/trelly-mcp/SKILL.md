@@ -8,7 +8,7 @@ description: >-
 
 # trelly-mcp
 
-MCP server for Trello (npm package **trelly**, bin **`trello-mcp`**). Returns JSON
+MCP server for Trello (npm package **trelly**, bin **`trelly-mcp`**). Returns JSON
 envelope on every tool: `{ ok, profile, data }` /
 `{ ok: false, error, status?, details? }`. Never uses CLI human/Ink output.
 
@@ -28,7 +28,7 @@ trelly auth list
 {
   "mcpServers": {
     "trelly": {
-      "command": "trello-mcp",
+      "command": "trelly-mcp",
       "env": {
         "TRELLO_PROFILE": "default"
       }
@@ -37,8 +37,8 @@ trelly auth list
 }
 ```
 
-After `npm install -g trelly`, `trello-mcp` is on PATH. From a clone, use the full path
-to `bin/trello-mcp`. See [mcp.example.json](../../mcp.example.json).
+After `npm install -g trelly`, `trelly-mcp` is on PATH. From a clone, use the full path
+to `bin/trelly-mcp`. See [mcp.example.json](../../mcp.example.json).
 
 ### 3. Restart the IDE
 
@@ -50,7 +50,7 @@ Reload MCP servers after editing config.
 cd trello-cli && bun run mcp
 ```
 
-Starts stdio MCP manually (IDE normally launches `trello-mcp` itself).
+Starts stdio MCP manually (IDE normally launches `trelly-mcp` itself).
 
 ## Using tools
 

@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "trelly": {
-      "command": "/Users/brandonk/dev/trello-cli/bin/trello-mcp",
+      "command": "/Users/brandonk/dev/trello-cli/bin/trelly-mcp",
       "env": {
         "TRELLO_PROFILE": "default"
       }
