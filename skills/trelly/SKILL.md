@@ -4,13 +4,18 @@ description: >-
   Operate the trelly Trello CLI (npm trelly; bins trelly/trello): auth setup/login,
   human vs --json output, boards/lists/cards, search, attachments, GitHub PR/commit
   links on cards, trello ui, trello api. Use when the user asks to run trelly/trello
-  commands, link a GitHub PR or commit to a Trello card, or automate Trello with trelly.
+  commands, list or show Trello cards/todos, link a GitHub PR or commit to a card, or
+  automate Trello with trelly.
 ---
 
 # trelly
 
 Fast Trello CLI (`npm install -g trelly`). **Human Trello-styled output by default**;
 **`--json` for scripts**. Commands: **`trelly`** or **`trello`** (same binary).
+
+> **Showing cards to a user?** Read [trelly-card-display.md](trelly-card-display.md).
+> Pi has no MCP — use **human CLI** (`trelly lists cards LIST_ID` without `--json`)
+> or format per that contract. Never reply with titles-only.
 
 ## Prerequisites
 
@@ -41,7 +46,9 @@ Credentials: `~/.config/trelly/config.json` (migrates from `~/.config/trello-cli
 
 - **Scripts:** always `--json` if parsing stdout.
 - **Token cost:** raw `--json` returns full Trello objects (a board list ≈ 10k tokens) — trim with `jq` (e.g. `| jq '.data[] | {id,name}'`) or request fewer fields (`--fields`, `--query "fields=id,name"`).
-- **Showing cards to a human?** Render one markdown line per card: `[name](shortUrl)` + non-zero badges `💬 n · 📎 n · ✓ x/y · ⏰ due` + labels as colored dots (red 🔴 orange 🟠 yellow 🟡 green 🟢 blue 🔵 purple 🟣). Slim the JSON first: `jq '.data[] | {name, shortUrl, labels: [.labels[] | {name, color}], badges: {comments: .badges.comments, attachments: .badges.attachments, checkItems: .badges.checkItems, checkItemsChecked: .badges.checkItemsChecked}, due, dueComplete}'`.
+- **Showing cards to a human?** See [trelly-card-display.md](trelly-card-display.md).
+  Human CLI (`trelly lists cards LIST_ID`) already matches the contract. With `--json`,
+  slim first: `jq '.data[] | {name, shortUrl, labels: [.labels[] | {name, color}], badges: {comments: .badges.comments, attachments: .badges.attachments, checkItems: .badges.checkItems, checkItemsChecked: .badges.checkItemsChecked}, due, dueComplete}'`.
 - **`--pretty` alone** does not emit JSON; it only indents `--json` output.
 - Errors: red `✗` in human mode; exit code `1`.
 

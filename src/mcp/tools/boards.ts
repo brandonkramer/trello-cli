@@ -2,8 +2,8 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import {
   profileField,
-  slimCards,
   toolEnvelopeSchema,
+  withCardListResult,
   withClient,
 } from "../handlers.ts";
 
@@ -120,23 +120,27 @@ export function registerBoardTools(server: McpServer): void {
   server.registerTool(
     "trello_board_cards",
     {
-      description: "List all cards on a board.",
+      description:
+        "List all cards on a board. Default fields omit badges/labels — pass fields including badges,labels for rich `display`. When showing cards to the user, paste response `display` verbatim.",
       inputSchema: {
         profile: profileField,
         boardId: z.string().min(1),
         fields: z
           .string()
-          .default("id,name,idList,due,dueComplete,shortUrl,closed")
+          .default("id,name,idList,due,dueComplete,shortUrl,closed,badges,labels")
           .describe(
-            'comma-separated fields, "all" for everything; add "badges,labels" for rich lists',
+            'comma-separated fields, "all" for everything; badges,labels included by default for display',
           ),
+        displayHeading: z.string().optional(),
       },
       annotations: { readOnlyHint: true },
       outputSchema,
     },
-    async ({ profile, boardId, fields }) =>
-      withClient(profile, async (client) =>
-        slimCards(await client.boardCards(boardId, { fields })),
+    async ({ profile, boardId, fields, displayHeading }) =>
+      withCardListResult(
+        profile,
+        (client) => client.boardCards(boardId, { fields }),
+        displayHeading,
       ),
   );
 }

@@ -6,8 +6,9 @@ developing this repo.
 
 | Skill | Use when |
 |-------|----------|
-| [trelly](trelly/SKILL.md) | Terminal / bash: `trelly boards list`, auth, attachments, GitHub PR/commit links, `--json` |
-| [trelly-mcp](trelly-mcp/SKILL.md) | IDE agent with MCP wired: tool names, GitHub links via `trello_api`, envelopes, safety |
+| [trelly](trelly/SKILL.md) | Terminal / bash: human card lists, auth, attachments, GitHub links, `--json` |
+| [trelly-mcp](trelly-mcp/SKILL.md) | IDE + MCP: paste `display` from list tools, GitHub links, safety |
+| [trelly-card-display](trelly-card-display.md) | **Required** when user asks to see/list cards (all platforms) |
 
 **One copy of the content:** `skills/trelly/` and `skills/trelly-mcp/` in the installed
 package. Plugins and Pi load from there — you don't maintain separate copies.

@@ -59,3 +59,7 @@ Run all three checks before committing.
 End-user skills/plugins ship in the npm tarball — see [`skills/README.md`](skills/README.md).
 Repo contributors: edit `skills/`; manifests at `.claude-plugin/`, `.codex-plugin/`,
 `.cursor-plugin/`, `package.json` `"pi"`.
+
+**Card list display:** shared contract in `skills/trelly-card-display.md`. MCP list
+tools must populate envelope `display` via `src/util/card-display.ts` — update tool
+descriptions when changing format. Agents should paste `display`, not reformat `data`.

@@ -2,8 +2,8 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import {
   profileField,
-  slimCards,
   toolEnvelopeSchema,
+  withCardListResult,
   withClient,
 } from "../handlers.ts";
 
@@ -31,7 +31,8 @@ export function registerListTools(server: McpServer): void {
   server.registerTool(
     "trello_list_cards",
     {
-      description: "List cards in a list.",
+      description:
+        "List cards in a list. Response includes `display` (markdown-v1, linked titles + 💬📎✓⏰ badges) — when the user should SEE cards, paste `display` verbatim; do not reformat as a plain title list.",
       inputSchema: {
         profile: profileField,
         listId: z.string().min(1),
@@ -39,13 +40,21 @@ export function registerListTools(server: McpServer): void {
           .string()
           .default("id,name,idList,due,dueComplete,shortUrl,closed,badges,labels")
           .describe('comma-separated fields, "all" for everything'),
+        displayHeading: z
+          .string()
+          .optional()
+          .describe(
+            'Optional markdown heading prepended to `display` (e.g. "**My Board → To do**")',
+          ),
       },
       annotations: { readOnlyHint: true },
       outputSchema,
     },
-    async ({ profile, listId, fields }) =>
-      withClient(profile, async (client) =>
-        slimCards(await client.listCards(listId, { fields })),
+    async ({ profile, listId, fields, displayHeading }) =>
+      withCardListResult(
+        profile,
+        (client) => client.listCards(listId, { fields }),
+        displayHeading,
       ),
   );
 }

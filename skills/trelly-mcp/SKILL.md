@@ -3,7 +3,8 @@ name: trelly-mcp
 description: >-
   Configure and use the trelly MCP stdio server (trello_boards_list,
   trello_card_create, trello_search, trello_api, etc.). Use when wiring Cursor/Claude
-  MCP, linking GitHub PRs/commits to Trello cards from an agent, or choosing MCP vs CLI.
+  MCP, listing or showing Trello cards/todos, linking GitHub PRs/commits, or choosing
+  MCP vs CLI.
 ---
 
 # trelly-mcp
@@ -12,15 +13,22 @@ MCP server for Trello (npm package **trelly**, bin **`trelly-mcp`**). Returns JS
 envelope on every tool: `{ ok, profile, data }` /
 `{ ok: false, error, status?, details? }`. Never uses CLI human/Ink output.
 
+> **Listing cards for a user?** Read [trelly-card-display.md](trelly-card-display.md).
+> **`trello_list_cards` / `trello_board_cards` include `display` — paste it verbatim.**
+
 List/get tools default to lean `fields` (id, name, url, due, …) to keep responses
-token-cheap; pass `fields: "all"` or a comma list when you need more.
-`trello_list_cards` and `trello_card_get` also include slim `badges`
-(comments/attachments/checkItems counts) and `labels` for rich rendering.
+token-cheap; pass `fields: "all"` when you need more.
+`trello_list_cards` and `trello_board_cards` include slim `badges`, `labels`, and
+pre-rendered **`display`** (markdown-v1).
 
 ## Rendering card lists for humans
 
-When the user asks to **see** cards (not automation), render one markdown line per
-card — title linked to the card, then only the badges that are non-zero:
+**Do not reformat.** When `display` is present, show it to the user unchanged
+(you may prepend context from `displayHeading` or your own board/list title).
+
+MCP tool text also leads with `display`, then JSON — prefer the markdown block.
+
+Manual format (only if `display` missing — e.g. raw `trello_api`):
 
 ```
 1. [Example card](https://trello.com/c/example123) 🔴 `Priority: Highest` · 💬 4 · 📎 2 · ✓ 2/5 · ⏰ Jul 5
@@ -29,7 +37,6 @@ card — title linked to the card, then only the badges that are non-zero:
 - Title → `[name](shortUrl)`. Counts from `badges`: 💬 comments · 📎 attachments · ✓ checkItemsChecked/checkItems.
 - Due: `⏰ Jul 5`, add `(overdue)` if past and not `dueComplete`; `✓` if complete.
 - Labels: colored dot + name in backticks. Trello color → emoji: red 🔴 · orange 🟠 · yellow 🟡 · green/lime 🟢 · blue/sky 🔵 · purple/pink 🟣 · black ⚫ · none ⚪.
-- Whole board: add `fields: "…,badges,labels"` to `trello_board_cards` (lean by default).
 - Custom-field chips (e.g. `Priority: Highest`): fetch defs once via `trello_api` GET
   `/boards/{boardId}/customFields`, request `customFieldItems` on cards, match
   `idValue` → option text/color. Skip unless the user wants them — it's an extra call.
@@ -100,9 +107,9 @@ Starts stdio MCP manually (IDE normally launches `trelly-mcp` itself).
 | `trello_board_create` | Create board |
 | `trello_board_archive` | Close board (reversible) |
 | `trello_board_lists` | Lists on board |
-| `trello_board_cards` | All cards on board |
+| `trello_board_cards` | All cards on board (**returns `display` — paste for users**) |
 | `trello_list_create` | Create list |
-| `trello_list_cards` | Cards in list |
+| `trello_list_cards` | Cards in list (**returns `display` markdown — paste for users**) |
 | `trello_card_get` | Card (`fields` optional) |
 | `trello_card_create` | Create card on list |
 | `trello_card_update` | Update card fields map |

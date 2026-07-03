@@ -7,6 +7,7 @@ import { customFieldChips } from "./cli/ui/custom-fields.ts";
 import { dueStatus, labelHex, listAccentHex } from "./cli/ui/palette.ts";
 import { isBoard, isCard, isLabel, isList } from "./cli/ui/shapes.ts";
 import { attachmentMime } from "./util/attachment.ts";
+import { formatCardLine, formatCardListMarkdown } from "./util/card-display.ts";
 
 describe("parseKvPairs", () => {
   it("parses key=value pairs", () => {
@@ -122,5 +123,32 @@ describe("ui shapes", () => {
     assert.ok(isList(list) && !isList(card) && !isList(label));
     assert.ok(isLabel(label) && !isLabel(list) && !isLabel(card));
     assert.ok(isBoard(board) && !isBoard(card) && !isBoard(list));
+  });
+});
+
+describe("card display markdown", () => {
+  it("formats linked title with labels and non-zero badges only", () => {
+    const line = formatCardLine({
+      name: "Example card",
+      shortUrl: "https://trello.com/c/example123",
+      labels: [{ name: "Backend", color: "blue" }],
+      badges: { comments: 2, attachments: 2, checkItems: 0, checkItemsChecked: 0 },
+    });
+    assert.match(
+      line,
+      /^\[Example card\]\(https:\/\/trello\.com\/c\/example123\)/,
+    );
+    assert.match(line, /🔵 `Backend`/);
+    assert.match(line, /💬 2/);
+    assert.match(line, /📎 2/);
+    assert.doesNotMatch(line, /✓/);
+  });
+
+  it("builds numbered list with optional heading", () => {
+    const md = formatCardListMarkdown(
+      [{ name: "A", shortUrl: "https://trello.com/c/a" }],
+      "**To do**",
+    );
+    assert.equal(md, "**To do**\n\n1. [A](https://trello.com/c/a)");
   });
 });
