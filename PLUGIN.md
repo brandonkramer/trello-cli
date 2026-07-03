@@ -1,12 +1,15 @@
 # Trelly agent plugin
 
-Marketplace-facing overview for **Cursor**, **Claude Code**, and **Codex**. The npm
-package root is the plugin bundle (skills + MCP + launcher scripts).
+Marketplace-facing overview for **Pi**, **Cursor**, **Claude Code**, and **Codex**. The
+npm package root is the plugin bundle (skills + MCP + launcher scripts).
+
+**Per-platform install (step-by-step):** [skills/README.md](skills/README.md)
 
 ## What it does
 
-- **Skills** teach agents when to use the CLI vs MCP, how auth works, and archive vs
-  delete safety (`skills/trelly`, `skills/trelly-mcp`).
+- **Skills** teach agents when to use the CLI vs MCP, card **`display`** lists, GitHub
+  links, and archive vs delete safety (`skills/trelly`, `skills/trelly-mcp`,
+  `skills/trelly-card-display.md`).
 - **MCP** exposes 27 Trello tools via stdio (`trelly-mcp` → `src/mcp/server.ts`).
 - **CLI** (`trelly`) is optional for humans/scripts; the plugin does not require global
   npm install if the IDE loads the plugin from this repository (MCP uses bundled
@@ -21,6 +24,16 @@ package root is the plugin bundle (skills + MCP + launcher scripts).
    trelly auth login    # browser OAuth → ~/.config/trelly/config.json
    ```
 3. macOS or Linux (`package.json` `"os"`).
+
+## Install by platform
+
+| Platform | Doc section |
+|----------|-------------|
+| Pi | [skills/README.md — Pi](skills/README.md#pi) |
+| Claude Code | [skills/README.md — Claude Code](skills/README.md#claude-code) |
+| Cursor | [skills/README.md — Cursor](skills/README.md#cursor) |
+| Codex | [skills/README.md — Codex](skills/README.md#codex) |
+| MCP only | [skills/README.md — MCP only](skills/README.md#mcp-only-all-ides) |
 
 ## Plugin layout
 

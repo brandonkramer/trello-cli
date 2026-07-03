@@ -211,20 +211,26 @@ CI runs the same via `bun install --frozen-lockfile`. See `AGENTS.md` for conven
 
 ## Agent skills & plugins
 
-The npm package ships agent skills plus plugin manifests, so Claude Code, Cursor,
-and pi agents learn the trelly CLI + MCP conventions automatically.
+Skills + IDE plugins ship in the npm package so agents learn CLI/MCP conventions
+(card **`display`** lists, GitHub links, archive vs delete).
 
-Install trelly and log in first (`npm install -g trelly && trelly auth setup && trelly auth login`), then:
+**Install trelly + auth once**, then pick your platform:
+
+| Platform | Install |
+|----------|---------|
+| **Pi** | `pi install npm:trelly` (skills + CLI only) |
+| **Claude Code** | `claude plugin install "$(npm root -g)/trelly"` → reload |
+| **Cursor** | `cp -R "$(npm root -g)/trelly" ~/.cursor/plugins/local/trelly` → reload window |
+| **Codex** | Local marketplace → `/plugins` → install Trelly |
 
 ```bash
-claude plugin install "$(npm root -g)/trelly"                    # Claude Code
-"$(npm root -g)/trelly/bin/install-cursor-plugin-local.sh"       # Cursor (copies plugin, then reload window)
-pi install npm:trelly                                            # pi
+npm install -g trelly && trelly auth setup && trelly auth login
 ```
 
-MCP-only (no plugin): add `trelly-mcp` to `~/.cursor/mcp.json` — see [mcp.example.json](mcp.example.json).
+Step-by-step for each platform, verify/update, and MCP-only fallback:
+**[skills/README.md](skills/README.md)** · **[CHANGELOG.md](CHANGELOG.md)**
 
-Details: [PLUGIN.md](PLUGIN.md) · [PRIVACY.md](PRIVACY.md) · [skills/README.md](skills/README.md)
+Also: [PLUGIN.md](PLUGIN.md) · [PRIVACY.md](PRIVACY.md)
 
 ## License
 
