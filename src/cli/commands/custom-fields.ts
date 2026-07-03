@@ -58,18 +58,14 @@ export function registerCustomFieldCommands(program: Command): void {
     .action((fieldId, opts, cmd) =>
       run(cmd, async () => {
         const { client } = getClient(rootOpts(cmd).profile);
-        return client.customFieldUpdateItem(
-          fieldId,
-          { idCard: opts.card },
-          {
-            value: {
-              text: opts.text,
-              number: opts.number,
-              date: opts.date,
-              checked: opts.checked,
-            },
+        return client.customFieldUpdateItem(opts.card, fieldId, {
+          value: {
+            text: opts.text,
+            number: opts.number,
+            date: opts.date,
+            checked: opts.checked,
           },
-        );
+        });
       }),
     );
 }

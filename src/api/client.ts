@@ -257,8 +257,15 @@ export class TrelloClient {
     return this.post(`/checklists/${id}/checkItems`, query);
   }
 
-  checklistUpdateItem(checklistId: string, itemId: string, query: Query) {
-    return this.put(`/checklists/${checklistId}/checkItems/${itemId}`, query);
+  async checklistUpdateItem(checklistId: string, itemId: string, query: Query) {
+    // Trello has no checklist-scoped update route — check items update via the card route only
+    const { idCard } = await this.get<{ idCard: string }>(
+      `/checklists/${checklistId}`,
+      {
+        fields: "idCard",
+      },
+    );
+    return this.put(`/cards/${idCard}/checkItem/${itemId}`, query);
   }
 
   checklistDeleteItem(checklistId: string, itemId: string) {
@@ -297,8 +304,9 @@ export class TrelloClient {
     return this.delete(`/customFields/${id}`);
   }
 
-  customFieldUpdateItem(id: string, query: Query, body?: JsonValue) {
-    return this.put(`/customFields/${id}/item`, query, body);
+  customFieldUpdateItem(cardId: string, customFieldId: string, body: JsonValue) {
+    // Trello has no customField-scoped item route — items update via the card route only
+    return this.put(`/cards/${cardId}/customField/${customFieldId}/item`, {}, body);
   }
 
   actionGet(id: string, query: Query = {}) {
