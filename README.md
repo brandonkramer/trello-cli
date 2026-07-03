@@ -33,6 +33,20 @@ Optional: `bun link` or add `bin/` to `PATH`.
 - **Pipes:** colors auto-disable when stdout is not a TTY.
 - **Scripts:** always pass `--json` if you parse stdout. The MCP server is unchanged (never uses CLI output).
 
+## Interactive UI
+
+Bare **`trello`** (no subcommand) opens the Ink kanban board in your terminal — same as `trello ui`.
+
+```bash
+trello              # board picker when no id given
+trello ui           # same
+trello ui BOARD_ID  # jump straight to a board
+```
+
+Requires a TTY. Keys: **arrows** / **hjkl** move focus, **Enter** card detail, **r** refresh, **q** / **Esc** back or quit.
+
+See the demo above or run `./bin/trello --help` for all subcommands.
+
 ## Auth
 
 Two steps: **API key** (app identity, once) → **token** (your account, per profile).
@@ -67,7 +81,7 @@ trello --json --pretty boards list | jq '.data[].name'
 trello --profile work boards lists BOARD_ID
 trello cards create --list LIST_ID --name "Ship feature"
 trello cards comments CARD_ID
-trello ui BOARD_ID                      # interactive kanban (terminal UI)
+trello cards comment CARD_ID --text "Shipped"
 trello search "customer onboarding"
 trello api -X PUT --path /cards/CARD_ID --query idList=LIST_ID
 trello api -X POST --path /cards --body '{"idList":"LIST_ID","name":"Hi"}'
@@ -76,6 +90,31 @@ trello api -X POST --path /cards --body '{"idList":"LIST_ID","name":"Hi"}'
 Flags: `-p, --profile <name>`, `--json`, `--pretty` (with `--json` only).
 
 **Archive** (reversible) vs **delete** (permanent): prefer `cards archive` / `boards archive` over `cards delete` / `boards delete`.
+
+### Command reference
+
+Top-level: `auth` · `boards` · `lists` · `cards` · `checklists` · `labels` · `custom-fields` · `search` · `webhooks` · `members` · `orgs` · `actions` · `api` · `ui`
+
+| Group | Subcommands |
+|-------|-------------|
+| **auth** | `setup` · `login` · `list` · `use` · `logout` · `url` |
+| **boards** | `list` · `get` · `create` · `update` · `archive` · `delete` · `lists` · `cards` · `labels` · `members` · `actions` · `custom-fields` |
+| **lists** | `get` · `create` · `update` · `archive` · `cards` |
+| **cards** | `get` · `list` · `create` · `update` · `move` · `comments` · `comment` · `archive` · `delete` · `members` · `add-member` · `remove-member` · `labels` · `add-label` · `remove-label` · `actions` · `attachments` · `add-attachment` · `custom-fields` |
+| **checklists** | `get` · `create` · `update` · `delete` · `add-item` · `update-item` · `delete-item` |
+| **labels** | `get` · `create` · `update` · `delete` |
+| **custom-fields** | `get` · `create` · `update` · `delete` · `set-item` |
+| **search** | `<query>` (`--model-types`, limits) |
+| **webhooks** | `list` · `create` · `get` · `delete` |
+| **members** | `me` |
+| **orgs** | `get` · `boards` |
+| **actions** | `get` |
+| **api** | raw REST (`-X`, `--path`, `--query`, `--body`) |
+| **ui** | `[boardId]` — or run bare `trello` |
+
+List-type custom field values: use `trello api` with `PUT /cards/{id}/customField/{fieldId}/item` and `{"idValue":"..."}` (see [skills/trello-cli/SKILL.md](skills/trello-cli/SKILL.md)).
+
+Per-subcommand flags: `./bin/trello <group> --help`. Curated examples and agent guidance: [skills/trello-cli/SKILL.md](skills/trello-cli/SKILL.md).
 
 ## MCP
 
@@ -88,7 +127,41 @@ Add to `~/.cursor/mcp.json` (see `mcp.example.json`):
 }
 ```
 
-Tools mirror the CLI (`trello_boards_list`, `trello_card_create`, `trello_search`, `trello_api`, …). Agents: prefer `*_archive` over `trello_card_delete` (permanent).
+Stdio server — JSON envelope on every tool (`{ ok, profile, data }`), never CLI human output. Pass **`profile`** on any tool for a non-default account. Prefer **`trello_*_archive`** over **`trello_card_delete`** (permanent; no board-delete MCP tool).
+
+### MCP tools (27)
+
+| Tool | Purpose |
+|------|---------|
+| `trello_profiles_list` | Saved profiles + default |
+| `trello_member_me` | Authenticated member |
+| `trello_boards_list` | Member boards |
+| `trello_board_get` | Board by id |
+| `trello_board_create` | Create board |
+| `trello_board_archive` | Close board (reversible) |
+| `trello_board_lists` | Lists on board |
+| `trello_board_cards` | All cards on board |
+| `trello_list_create` | Create list |
+| `trello_list_cards` | Cards in list |
+| `trello_card_get` | Card by id |
+| `trello_card_create` | Create card |
+| `trello_card_update` | Update card fields |
+| `trello_card_move` | Move to another list |
+| `trello_card_comments` | List comments |
+| `trello_card_comment` | Add comment |
+| `trello_card_archive` | Close card (reversible) |
+| `trello_card_delete` | **Permanent** delete |
+| `trello_checklist_create` | Checklist on card |
+| `trello_checklist_add_item` | Checklist item |
+| `trello_label_create` | Board label |
+| `trello_card_add_label` | Label on card |
+| `trello_search` | Search Trello |
+| `trello_webhooks_list` | Token webhooks |
+| `trello_webhook_create` | Create webhook |
+| `trello_webhook_delete` | Delete webhook |
+| `trello_api` | Raw REST escape hatch |
+
+Full tool notes and MCP vs CLI guidance: [skills/trello-mcp/SKILL.md](skills/trello-mcp/SKILL.md).
 
 ## Development
 
