@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { packageVersion } from "../version.ts";
-import { registerTrelloTools } from "./register-tools.ts";
+import { registerTrelloTools } from "./tools/index.ts";
 
 const server = new McpServer({ name: "trello-cli", version: packageVersion() });
 registerTrelloTools(server);
