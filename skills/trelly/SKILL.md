@@ -2,9 +2,9 @@
 name: trelly
 description: >-
   Operate the trelly Trello CLI (npm trelly; bins trelly/trello): auth setup/login,
-  human vs --json output, boards/lists/cards, search, trello ui, trello api. Use when
-  the user asks to run trelly/trello commands, script Trello from the terminal, or
-  automate Trello with trelly.
+  human vs --json output, boards/lists/cards, search, attachments, GitHub PR/commit
+  links on cards, trello ui, trello api. Use when the user asks to run trelly/trello
+  commands, link a GitHub PR or commit to a Trello card, or automate Trello with trelly.
 ---
 
 # trelly
@@ -56,6 +56,8 @@ trelly cards comments CARD_ID
 trelly cards create --list LIST_ID --name "Task"
 trelly cards move CARD_ID --list OTHER_LIST_ID
 trelly cards comment CARD_ID --text "Done"
+trelly cards attachments CARD_ID
+trelly cards add-attachment CARD_ID --url "https://github.com/org/repo/pull/42"
 trelly search "query"
 trelly ui BOARD_ID                    # interactive kanban (TTY required)
 trelly auth list
@@ -72,6 +74,89 @@ trelly api -X POST --path /cards --body '{"idList":"LIST_ID","name":"Hi"}'
 ```
 
 Request body flag is **`--body`** (not `--json` — that flag is global output).
+
+## Card attachments
+
+```bash
+trelly cards attachments CARD_ID
+trelly cards add-attachment CARD_ID --url "https://…" [--name "label"]
+trelly cards add-attachment CARD_ID --file ./screenshot.png [--name "label"]
+trelly cards delete-attachment CARD_ID ATTACHMENT_ID
+```
+
+Pass **exactly one** of `--url` or `--file`. In `trelly ui`, open a card's detail (**⏎**), then **a** opens the attach prompt (URL or local path).
+
+## GitHub PR / commit on a card
+
+Boards with the **GitHub Power-Up** enabled can show rich PR metadata in the Trello UI.
+trelly attaches the same underlying **URL attachment** — it does **not** drive the
+Power-Up picker or OAuth flow.
+
+### Link a PR or commit (preferred)
+
+```bash
+# Pull request — set --name so the attachment is scannable in lists/UI
+trelly cards add-attachment CARD_ID \
+  --url "https://github.com/PangoliaDev/dogster/pull/197" \
+  --name "#197 fix(pre-existing-tests-and-types)"
+
+# Commit
+trelly cards add-attachment CARD_ID \
+  --url "https://github.com/PangoliaDev/dogster/commit/2d856ea" \
+  --name "2d856ea Merge PR #197"
+
+# Issue (same mechanism)
+trelly cards add-attachment CARD_ID \
+  --url "https://github.com/PangoliaDev/dogster/issues/42"
+```
+
+Accepted URL shapes: `…/pull/N`, `…/commit/SHA`, `…/issues/N`, `…/tree/branch`.
+Use the canonical `https://github.com/…` URL (no `/files` or `/commits` tab suffix).
+
+### Power-Up UI vs trelly URL attachment
+
+| Feature | GitHub Power-Up (Trello UI) | `cards add-attachment --url` |
+|--------|-----------------------------|------------------------------|
+| Link on card | Yes | Yes |
+| Readable `--name` / PR title | Yes (auto) | Set `--name` yourself (recommended) |
+| CI/check badges on card front | Yes | No |
+| Pick PR from repo browser | Yes | No — pass URL |
+| Comment back on GitHub PR | Yes (optional setting) | No |
+
+If the user needs badges or GitHub-side back-links, attach via **Power-Ups → GitHub**
+in Trello. For agent/CLI workflows (ship PR → link card → move list), URL attachment
+is enough.
+
+### Agent workflow patterns
+
+**After opening or merging a PR** — attach and optionally move the card:
+
+```bash
+CARD_ID=…
+PR_URL="https://github.com/PangoliaDev/dogster/pull/197"
+trelly cards add-attachment "$CARD_ID" --url "$PR_URL" --name "#197 fix scope"
+trelly cards move "$CARD_ID" --list PENDING_REVIEW_LIST_ID
+```
+
+**Fallback — comment only** (visible in activity, not Attachments):
+
+```bash
+trelly cards comment CARD_ID --text "PR: https://github.com/org/repo/pull/42"
+```
+
+**Inspect what's linked:**
+
+```bash
+trelly --json cards attachments CARD_ID | jq '.data[] | {name, url}'
+```
+
+### Raw API (same as CLI)
+
+```bash
+trelly api -X POST --path "/cards/CARD_ID/attachments" \
+  --query "url=https://github.com/org/repo/pull/42" \
+  --query "name=#42 feature title"
+```
 
 ## Custom fields (list-type)
 

@@ -6,8 +6,8 @@ developing this repo.
 
 | Skill | Use when |
 |-------|----------|
-| [trelly](trelly/SKILL.md) | Terminal / bash: `trelly boards list`, auth, `--json` |
-| [trelly-mcp](trelly-mcp/SKILL.md) | IDE agent with MCP wired: tool names, envelopes, safety |
+| [trelly](trelly/SKILL.md) | Terminal / bash: `trelly boards list`, auth, attachments, GitHub PR/commit links, `--json` |
+| [trelly-mcp](trelly-mcp/SKILL.md) | IDE agent with MCP wired: tool names, GitHub links via `trello_api`, envelopes, safety |
 
 **One copy of the content:** `skills/trelly/` and `skills/trelly-mcp/` in the installed
 package. Plugins and Pi load from there — you don't maintain separate copies.
