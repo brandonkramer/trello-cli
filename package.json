@@ -1,19 +1,27 @@
 {
-  "name": "trello-cli",
+  "name": "trelly",
   "version": "0.1.0",
-  "description": "Fast Trello CLI with multi-profile auth and MCP server",
+  "description": "Fast Trello CLI with multi-profile auth, MCP server, and kanban TUI",
   "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/brandonkramer/trello-cli.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
   "files": [
     "bin/",
     "src/"
   ],
   "bin": {
     "trello": "./bin/trello",
+    "trelly": "./bin/trello",
     "trello-mcp": "./bin/trello-mcp"
   },
   "scripts": {
@@ -24,7 +32,8 @@
     "lint": "biome check .",
     "fmt": "biome format --write .",
     "fmt:check": "biome check .",
-    "postinstall": "chmod +x bin/trello bin/trello-mcp bin/run-ts 2>/dev/null || true"
+    "postinstall": "chmod +x bin/trello bin/trello-mcp bin/run-ts 2>/dev/null || true",
+    "prepublishOnly": "bun run typecheck && bun test && bun run lint"
   },
   "engines": {
     "bun": ">=1.2.0",
