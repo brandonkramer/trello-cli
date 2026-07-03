@@ -1,6 +1,11 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { profileField, toolEnvelopeSchema, withClient } from "../handlers.ts";
+import {
+  profileField,
+  slimCards,
+  toolEnvelopeSchema,
+  withClient,
+} from "../handlers.ts";
 
 export function registerBoardTools(server: McpServer): void {
   const outputSchema = toolEnvelopeSchema;
@@ -122,12 +127,16 @@ export function registerBoardTools(server: McpServer): void {
         fields: z
           .string()
           .default("id,name,idList,due,dueComplete,shortUrl,closed")
-          .describe('comma-separated fields, "all" for everything'),
+          .describe(
+            'comma-separated fields, "all" for everything; add "badges,labels" for rich lists',
+          ),
       },
       annotations: { readOnlyHint: true },
       outputSchema,
     },
     async ({ profile, boardId, fields }) =>
-      withClient(profile, (client) => client.boardCards(boardId, { fields })),
+      withClient(profile, async (client) =>
+        slimCards(await client.boardCards(boardId, { fields })),
+      ),
   );
 }

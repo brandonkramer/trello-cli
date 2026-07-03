@@ -19,9 +19,47 @@ export const profileField = z.string().optional().describe("Auth profile name");
 export function toolResult(envelope: ToolEnvelope): CallToolResult {
   return {
     structuredContent: envelope,
-    content: [{ type: "text", text: JSON.stringify(envelope, null, 2) }],
+    content: [{ type: "text", text: JSON.stringify(envelope) }],
     isError: envelope.ok === false,
   };
+}
+
+// Trello's badges object is ~400 chars of mostly unused keys; keep the 4 that matter.
+const BADGE_KEYS = ["comments", "attachments", "checkItems", "checkItemsChecked"];
+
+function slimCard(card: Record<string, unknown>): Record<string, unknown> {
+  const out = { ...card };
+  if (out.badges && typeof out.badges === "object" && !Array.isArray(out.badges)) {
+    const badges = out.badges as Record<string, unknown>;
+    out.badges = Object.fromEntries(
+      BADGE_KEYS.filter((key) => badges[key] !== undefined).map((key) => [
+        key,
+        badges[key],
+      ]),
+    );
+  }
+  if (Array.isArray(out.labels)) {
+    out.labels = out.labels.map((label) => {
+      const { id, name, color } = label as Record<string, unknown>;
+      return { id, name, color };
+    });
+  }
+  return out;
+}
+
+/** Slim badges/labels on a card or card array returned by Trello. */
+export function slimCards(data: unknown): unknown {
+  if (Array.isArray(data)) {
+    return data.map((item) =>
+      item && typeof item === "object"
+        ? slimCard(item as Record<string, unknown>)
+        : item,
+    );
+  }
+  if (data && typeof data === "object") {
+    return slimCard(data as Record<string, unknown>);
+  }
+  return data;
 }
 
 export async function withClient<T>(
