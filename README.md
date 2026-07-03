@@ -211,29 +211,20 @@ CI runs the same via `bun install --frozen-lockfile`. See `AGENTS.md` for conven
 
 ## Agent skills & plugins
 
-Shipped in the npm package for **end users** — skills plus IDE plugin manifests. Full
-plugin docs: [PLUGIN.md](PLUGIN.md) · Privacy: [PRIVACY.md](PRIVACY.md) ·
-[skills/README.md](skills/README.md).
+The npm package ships agent skills plus plugin manifests, so Claude Code, Cursor,
+and pi agents learn the trelly CLI + MCP conventions automatically.
+
+Install trelly and log in first (`npm install -g trelly && trelly auth setup && trelly auth login`), then:
 
 ```bash
-npm install -g trelly
-trelly auth setup && trelly auth login
-
-pi install npm:trelly
-claude plugin install "$(npm root -g)/trelly"
-./bin/install-cursor-plugin-local.sh   # Cursor local test (copy, not symlink)
+claude plugin install "$(npm root -g)/trelly"                    # Claude Code
+"$(npm root -g)/trelly/bin/install-cursor-plugin-local.sh"       # Cursor (copies plugin, then reload window)
+pi install npm:trelly                                            # pi
 ```
 
-MCP-only (no plugin): add `trelly-mcp` to `~/.cursor/mcp.json` — [mcp.example.json](mcp.example.json).
+MCP-only (no plugin): add `trelly-mcp` to `~/.cursor/mcp.json` — see [mcp.example.json](mcp.example.json).
 
-### Marketplace submission
-
-| Platform | Submit |
-|----------|--------|
-| **Cursor** | [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish) → `https://github.com/brandonkramer/trelly` |
-| **Claude Code** | [clau.de/plugin-directory-submission](https://clau.de/plugin-directory-submission) |
-
-Open source (MIT). After Claude listing: `/plugin install trelly@claude-plugins-official`.
+Details: [PLUGIN.md](PLUGIN.md) · [PRIVACY.md](PRIVACY.md) · [skills/README.md](skills/README.md)
 
 ## License
 
