@@ -1,8 +1,8 @@
 # trello-cli
 
-Trello CLI + MCP server. **Human, Trello-styled output by default**; add `--json` for the
-`{ ok, profile, data }` envelope (scripts/automation). Runs on **Bun** (or **tsx** / Node 22+
-via `bin/run-ts`).
+Trello CLI + MCP server. **Human, Trello-styled output by default**; add `--json` for scripts and automation.
+
+![trello-cli interactive UI](cli.gif)
 
 Boards, lists, cards, checklists, labels, custom fields, search, webhooks, multi-profile
 auth, interactive `trello ui`, raw `trello api` escape hatch.
