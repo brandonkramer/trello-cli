@@ -44,6 +44,49 @@ Reload Claude Code. The plugin starts `trelly-mcp` and loads `skills/trelly` +
 **MCP only** (no plugin skills): add to your Claude MCP config using `trelly-mcp` on PATH
 (see [trelly-mcp/SKILL.md](trelly-mcp/SKILL.md)).
 
+## Codex
+
+Codex uses `.codex-plugin/plugin.json` (same layout as Claude: skills + `.mcp.json` at
+package root). Install via a **marketplace** — see
+[Codex plugin docs](https://developers.openai.com/codex/plugins/build).
+
+After `npm install -g trelly`:
+
+```bash
+mkdir -p ~/.agents/plugins
+ln -sf "$(npm root -g)/trelly" ~/.agents/plugins/trelly
+```
+
+`~/.agents/plugins/marketplace.json`:
+
+```json
+{
+  "name": "local-trelly",
+  "interface": { "displayName": "Trelly" },
+  "plugins": [
+    {
+      "name": "trelly",
+      "source": {
+        "source": "local",
+        "path": "./trelly"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
+```
+
+Restart Codex, run `/plugins`, install **Trelly**, then `trelly auth setup && trelly auth login`
+once. Codex sets `${PLUGIN_ROOT}` (and `${CLAUDE_PLUGIN_ROOT}`) so bundled MCP finds
+`bin/trelly-mcp`.
+
+For team/repo distribution, publish a marketplace with a `git-subdir` entry pointing at
+this package, or use `codex plugin marketplace add owner/repo`.
+
 ## Cursor
 
 **Plugin (skills + MCP):**
@@ -63,6 +106,7 @@ Restart Cursor / reload MCP.
 |-------|------|
 | `skills/` | Agent instructions (CLI vs MCP, auth, safety) — **the content** |
 | `.claude-plugin/` + `.mcp.json` | Claude Code plugin manifest + MCP wiring |
+| `.codex-plugin/` + `.mcp.json` | Codex plugin manifest + MCP wiring |
 | `.cursor-plugin/` | Cursor plugin manifest + MCP wiring |
 | `package.json` `"pi"` | Pi package manifest (skills path) |
 

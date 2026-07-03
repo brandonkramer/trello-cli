@@ -1,0 +1,23 @@
+{
+  "name": "trelly",
+  "version": "0.1.1",
+  "description": "Trello CLI + MCP — boards, lists, cards, search, and raw API via trelly-mcp",
+  "author": {
+    "name": "brandonkramer",
+    "url": "https://github.com/brandonkramer"
+  },
+  "homepage": "https://github.com/brandonkramer/trelly#readme",
+  "repository": "https://github.com/brandonkramer/trelly",
+  "license": "MIT",
+  "keywords": ["trello", "trelly", "mcp", "kanban"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Trelly",
+    "shortDescription": "Trello boards, cards, and search from Codex",
+    "longDescription": "Manage Trello with trelly-mcp tools and CLI guidance. Auth once with trelly auth login.",
+    "developerName": "brandonkramer",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"]
+  }
+}

@@ -35,6 +35,7 @@
     "src/",
     "skills/",
     ".claude-plugin/",
+    ".codex-plugin/",
     ".cursor-plugin/",
     ".mcp.json"
   ],

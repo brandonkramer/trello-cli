@@ -57,5 +57,5 @@ Run all three checks before committing.
 ## Agent skills
 
 End-user skills/plugins ship in the npm tarball — see [`skills/README.md`](skills/README.md).
-Repo contributors: edit `skills/`; manifests at `.claude-plugin/`, `.cursor-plugin/`,
-`package.json` `"pi"`.
+Repo contributors: edit `skills/`; manifests at `.claude-plugin/`, `.codex-plugin/`,
+`.cursor-plugin/`, `package.json` `"pi"`.

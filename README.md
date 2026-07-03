@@ -203,6 +203,7 @@ trelly auth setup && trelly auth login
 
 pi install npm:trelly
 claude plugin install "$(npm root -g)/trelly"
+ln -sf "$(npm root -g)/trelly" ~/.agents/plugins/trelly   # Codex (see skills/README)
 ln -sf "$(npm root -g)/trelly" ~/.cursor/plugins/local/trelly   # Cursor plugin
 ```
 
