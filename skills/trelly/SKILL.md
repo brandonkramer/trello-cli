@@ -47,8 +47,9 @@ Credentials: `~/.config/trelly/config.json` (migrates from `~/.config/trello-cli
 - **Scripts:** always `--json` if parsing stdout.
 - **Token cost:** raw `--json` returns full Trello objects (a board list ≈ 10k tokens) — trim with `jq` (e.g. `| jq '.data[] | {id,name}'`) or request fewer fields (`--fields`, `--query "fields=id,name"`).
 - **Showing cards to a human?** See [trelly-card-display.md](trelly-card-display.md).
-  Human CLI (`trelly lists cards LIST_ID`) already matches the contract. With `--json`,
-  slim first: `jq '.data[] | {name, shortUrl, labels: [.labels[] | {name, color}], badges: {comments: .badges.comments, attachments: .badges.attachments, checkItems: .badges.checkItems, checkItemsChecked: .badges.checkItemsChecked}, due, dueComplete}'`.
+  Prefer human CLI (`trelly lists cards LIST_ID`). With `--json`, slim first, then
+  apply **Manual format** in that doc:
+  `jq '.data[] | {name, shortUrl, labels: [.labels[] | {name, color}], badges: {comments: .badges.comments, attachments: .badges.attachments, checkItems: .badges.checkItems, checkItemsChecked: .badges.checkItemsChecked}, due, dueComplete}'`.
 - **`--pretty` alone** does not emit JSON; it only indents `--json` output.
 - Errors: red `✗` in human mode; exit code `1`.
 

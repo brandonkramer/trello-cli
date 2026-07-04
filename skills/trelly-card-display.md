@@ -13,14 +13,7 @@ board, column, "what's on…"), you MUST NOT reply with a plain numbered title l
 **Rule: paste `display` verbatim** (optionally add a heading via `displayHeading`).
 Do not re-summarize `data` into your own format.
 
-Example line:
-
-```text
-1. [Example card](https://trello.com/c/example123) · 💬 2 · 📎 2
-```
-
-Badge keys (omit when zero): 💬 comments · 📎 attachments · ✓ checked/total · ⏰ due.
-Labels: colored dot + `` `name` `` (🔴 🟠 🟡 🟢 🔵 🟣 ⚫ ⚪).
+MCP tool text leads with `display`, then JSON — prefer the markdown block.
 
 ## CLI / Pi (no MCP)
 
@@ -30,8 +23,32 @@ Labels: colored dot + `` `name` `` (🔴 🟠 🟡 🟢 🔵 🟣 ⚫ ⚪).
 trelly lists cards LIST_ID
 ```
 
-**If using `--json`:** format with the jq recipe in `skills/trelly/SKILL.md` Output
-contract, or call MCP when available.
+Human CLI output already matches this contract — do not reformat it.
+
+**If using `--json`:** slim with the jq recipe in `skills/trelly/SKILL.md` Output
+contract, then apply **Manual format** below (or call MCP when available).
+
+## Manual format (raw JSON only)
+
+Use when you have card JSON but no pre-rendered markdown — e.g. MCP `trello_api`,
+CLI `--json` after the jq slim step, or any path where `display` is missing.
+
+Example line:
+
+```text
+1. [Example card](https://trello.com/c/example123) 🔴 `Priority: Highest` · 💬 4 · 📎 2 · ✓ 2/5 · ⏰ Jul 5
+```
+
+- Title → `[name](shortUrl)`.
+- Counts from `badges` (omit when zero): 💬 comments · 📎 attachments ·
+  ✓ `checkItemsChecked`/`checkItems`.
+- Due: `⏰ Jul 5`, add `(overdue)` if past and not `dueComplete`; prefix `✓` if complete.
+- Labels: colored dot + name in backticks. Trello color → emoji: red 🔴 · orange 🟠 ·
+  yellow 🟡 · green/lime 🟢 · blue/sky 🔵 · purple/pink 🟣 · black ⚫ · none ⚪.
+- Custom-field chips (e.g. `Priority: Highest`): fetch defs once via GET
+  `/boards/{boardId}/customFields` (`trello_api` or `trelly api`), request
+  `customFieldItems` on cards, match `idValue` → option text/color. Skip unless the
+  user wants them — it's an extra call.
 
 ## Automation only
 

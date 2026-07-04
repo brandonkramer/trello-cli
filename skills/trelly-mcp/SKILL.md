@@ -21,25 +21,11 @@ token-cheap; pass `fields: "all"` when you need more.
 `trello_list_cards` and `trello_board_cards` include slim `badges`, `labels`, and
 pre-rendered **`display`** (markdown-v1).
 
-## Rendering card lists for humans
+## Card lists for humans
 
-**Do not reformat.** When `display` is present, show it to the user unchanged
-(you may prepend context from `displayHeading` or your own board/list title).
-
-MCP tool text also leads with `display`, then JSON — prefer the markdown block.
-
-Manual format (only if `display` missing — e.g. raw `trello_api`):
-
-```
-1. [Example card](https://trello.com/c/example123) 🔴 `Priority: Highest` · 💬 4 · 📎 2 · ✓ 2/5 · ⏰ Jul 5
-```
-
-- Title → `[name](shortUrl)`. Counts from `badges`: 💬 comments · 📎 attachments · ✓ checkItemsChecked/checkItems.
-- Due: `⏰ Jul 5`, add `(overdue)` if past and not `dueComplete`; `✓` if complete.
-- Labels: colored dot + name in backticks. Trello color → emoji: red 🔴 · orange 🟠 · yellow 🟡 · green/lime 🟢 · blue/sky 🔵 · purple/pink 🟣 · black ⚫ · none ⚪.
-- Custom-field chips (e.g. `Priority: Highest`): fetch defs once via `trello_api` GET
-  `/boards/{boardId}/customFields`, request `customFieldItems` on cards, match
-  `idValue` → option text/color. Skip unless the user wants them — it's an extra call.
+See [trelly-card-display.md](trelly-card-display.md). **`trello_list_cards` /
+`trello_board_cards`:** paste `display` verbatim. Raw **`trello_api`** (no `display`):
+use **Manual format** in that doc.
 
 ## Setup
 
