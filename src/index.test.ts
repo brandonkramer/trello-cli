@@ -134,10 +134,7 @@ describe("card display markdown", () => {
       labels: [{ name: "Backend", color: "blue" }],
       badges: { comments: 2, attachments: 2, checkItems: 0, checkItemsChecked: 0 },
     });
-    assert.match(
-      line,
-      /^\[Example card\]\(https:\/\/trello\.com\/c\/example123\)/,
-    );
+    assert.match(line, /^\[Example card\]\(https:\/\/trello\.com\/c\/example123\)/);
     assert.match(line, /🔵 `Backend`/);
     assert.match(line, /💬 2/);
     assert.match(line, /📎 2/);
