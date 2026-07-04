@@ -106,13 +106,13 @@ Power-Up picker or OAuth flow.
 ```bash
 # Pull request — set --name so the attachment is scannable in lists/UI
 trelly cards add-attachment CARD_ID \
-  --url "https://github.com/org/repo/pull/197" \
-  --name "#197 fix(pre-existing-tests-and-types)"
+  --url "https://github.com/org/repo/pull/42" \
+  --name "#42 fix authentication bug"
 
 # Commit
 trelly cards add-attachment CARD_ID \
-  --url "https://github.com/org/repo/commit/2d856ea" \
-  --name "2d856ea Merge PR #197"
+  --url "https://github.com/org/repo/commit/abc1234" \
+  --name "abc1234 Merge PR #42"
 
 # Issue (same mechanism)
 trelly cards add-attachment CARD_ID \
@@ -142,8 +142,8 @@ is enough.
 
 ```bash
 CARD_ID=…
-PR_URL="https://github.com/org/repo/pull/197"
-trelly cards add-attachment "$CARD_ID" --url "$PR_URL" --name "#197 fix scope"
+PR_URL="https://github.com/org/repo/pull/42"
+trelly cards add-attachment "$CARD_ID" --url "$PR_URL" --name "#42 fix scope"
 trelly cards move "$CARD_ID" --list PENDING_REVIEW_LIST_ID
 ```
 
