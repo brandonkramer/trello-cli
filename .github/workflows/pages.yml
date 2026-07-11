@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  deployments: write
   pages: write
   id-token: write
 
@@ -16,7 +17,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy-cloudflare:
+    if: ${{ vars.CLOUDFLARE_PAGES_PROJECT != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >-
+            pages deploy powerup
+            --project-name=${{ vars.CLOUDFLARE_PAGES_PROJECT }}
+            --branch=main
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-github:
+    if: ${{ vars.CLOUDFLARE_PAGES_PROJECT == '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,8 +44,9 @@ jobs:
           path: powerup
 
   # separate job so re-running a failed deploy never re-uploads the artifact
-  deploy:
-    needs: build
+  deploy-github-pages:
+    if: ${{ vars.CLOUDFLARE_PAGES_PROJECT == '' }}
+    needs: deploy-github
     runs-on: ubuntu-latest
     environment:
       name: github-pages
