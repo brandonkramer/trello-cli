@@ -57,10 +57,10 @@ Run all three checks before committing.
   you verified it
 - Never force-push `main`
 - Release: first move all shipped notes from `[Unreleased]` into a dated version section
-  in `CHANGELOG.md` and update its comparison links. Run all three checks, bump
-  `package.json`, commit `chore(release): vX.Y.Z`, create an annotated `vX.Y.Z` tag, and
-  push the commit and tag. The tag runs `release.yml` (npm publish with provenance →
-  GitHub Release → tap bump).
+  in `CHANGELOG.md` and update its comparison links. Run all three checks; bump
+  `package.json` and every platform `plugin.json` manifest to the same version; commit
+  `chore(release): vX.Y.Z`; create an annotated `vX.Y.Z` tag; and push the commit and tag.
+  The tag runs `release.yml` (npm publish with provenance → GitHub Release → tap bump).
 
 ## Agent skills
 
