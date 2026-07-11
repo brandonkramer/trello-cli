@@ -21,12 +21,13 @@ jobs:
     if: ${{ vars.CLOUDFLARE_PAGES_PROJECT != '' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: npm
           command: >-
             pages deploy powerup
             --project-name=${{ vars.CLOUDFLARE_PAGES_PROJECT }}
@@ -37,7 +38,7 @@ jobs:
     if: ${{ vars.CLOUDFLARE_PAGES_PROJECT == '' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
