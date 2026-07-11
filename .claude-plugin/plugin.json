@@ -11,5 +11,12 @@
   "license": "MIT",
   "keywords": ["trello", "trelly", "mcp", "kanban", "productivity"],
   "skills": ["./skills"],
-  "mcpServers": "./.mcp.json"
+  "mcpServers": {
+    "trelly": {
+      "command": "${CLAUDE_PLUGIN_ROOT}/bin/trelly-mcp",
+      "env": {
+        "TRELLO_PROFILE": "default"
+      }
+    }
+  }
 }

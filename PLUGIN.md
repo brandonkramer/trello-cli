@@ -48,8 +48,7 @@ TTLs, concurrent request deduplication, and mutation-aware invalidation. Read to
 |------|---------|
 | `.cursor-plugin/plugin.json` | Cursor manifest |
 | `.cursor-plugin/mcp.json` | Cursor MCP (bundled `bin/trelly-mcp`) |
-| `.claude-plugin/plugin.json` | Claude Code manifest |
-| `.mcp.json` | Claude MCP (`${CLAUDE_PLUGIN_ROOT}/bin/trelly-mcp`) |
+| `.claude-plugin/plugin.json` | Claude Code manifest + inline MCP wiring |
 | `.codex-plugin/plugin.json` | Codex manifest + inline MCP (`./bin/trelly-mcp`) |
 | `.antigravity-plugin/plugin.json` | Google Antigravity manifest |
 | `.antigravity-plugin/mcp_config.json` | Google Antigravity MCP (bundled `bin/trelly-mcp`) |

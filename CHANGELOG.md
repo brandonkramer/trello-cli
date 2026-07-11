@@ -11,6 +11,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 - Codex plugin MCP startup now uses a host-compatible inline relative command instead of
   relying on Claude's `${CLAUDE_PLUGIN_ROOT}` expansion.
+- Claude plugin MCP startup is defined inline in its manifest, removing the redundant
+  root `.mcp.json` and keeping platform launch configuration isolated.
 - Agent skill documentation no longer advertises the removed `trello` CLI alias and now
   documents the working Codex marketplace path, install command, and reload flow.
 

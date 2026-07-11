@@ -201,7 +201,7 @@ Reload MCP. Skills are **not** loaded — read [trelly-mcp/SKILL.md](trelly-mcp/
 
 Codex uses `.codex-plugin/plugin.json`, which contains its MCP launch configuration
 inline. The relative command and working directory resolve from the installed plugin root;
-Claude continues to use the root `.mcp.json`.
+Claude has its own inline launch configuration in `.claude-plugin/plugin.json`.
 
 ### Install (recommended — local marketplace)
 
@@ -317,7 +317,7 @@ When you only want Trello **tools** in chat (no bundled skills):
 | IDE | Config file (typical) |
 |-----|------------------------|
 | Cursor | `~/.cursor/mcp.json` |
-| Claude Code | Claude MCP / plugin `.mcp.json` when not using full plugin |
+| Claude Code | Claude MCP settings when not using the full plugin |
 | Codex | Inline plugin manifest or Codex MCP settings |
 
 ---
@@ -330,7 +330,7 @@ When you only want Trello **tools** in chat (no bundled skills):
 | `bin/trelly` | CLI (human output + `--json`) |
 | `bin/trelly-mcp` | MCP stdio server |
 | `.antigravity-plugin/` | Google Antigravity plugin manifest & MCP config |
-| `.claude-plugin/` + `.mcp.json` | Claude Code plugin + MCP wiring |
+| `.claude-plugin/plugin.json` | Claude Code plugin + inline MCP wiring |
 | `.codex-plugin/plugin.json` | Codex plugin + inline MCP wiring |
 | `.cursor-plugin/` + `.cursor-plugin/mcp.json` | Cursor plugin + MCP wiring |
 | `package.json` `"pi"` | Pi skills path |
