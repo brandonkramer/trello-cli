@@ -66,6 +66,10 @@ trelly install --codex --yes
 | `assets/logo.svg` | Plugin logo |
 | [PRIVACY.md](PRIVACY.md) | Data handling |
 
+Cursor starts plugin MCP commands from the active workspace, so root `mcp.json` resolves
+the bundled launcher through Cursor's local-plugin or marketplace-cache directories rather
+than relying on the current working directory.
+
 ## Test locally (Cursor)
 
 Symlinks are unreliable in Cursor plugins — **copy** the repo:

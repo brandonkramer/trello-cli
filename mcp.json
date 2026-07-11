@@ -2,7 +2,10 @@
   "mcpServers": {
     "trelly": {
       "command": "bash",
-      "args": ["./bin/trelly-mcp"],
+      "args": [
+        "-c",
+        "LOCAL=\"$HOME/.cursor/plugins/local/trelly/bin/trelly-mcp\"; if [ -x \"$LOCAL\" ]; then exec \"$LOCAL\"; fi; CACHED=\"$(find \"$HOME/.cursor/plugins/cache\" -type f -path '*/bin/trelly-mcp' -perm -u+x -print -quit 2>/dev/null)\"; if [ -n \"$CACHED\" ]; then exec \"$CACHED\"; fi; if command -v trelly-mcp >/dev/null 2>&1; then exec trelly-mcp; fi; echo 'trelly-mcp not found; run trelly install --cursor' >&2; exit 127"
+      ],
       "env": {
         "TRELLO_PROFILE": "default"
       }

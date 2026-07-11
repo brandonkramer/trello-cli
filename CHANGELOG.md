@@ -7,6 +7,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [Unreleased]
 
+## [0.3.7] - 2026-07-11
+
+### Fixed
+
+- Cursor's plugin MCP launcher now resolves the bundled `trelly-mcp` from local-plugin or
+  marketplace-cache storage instead of incorrectly resolving `./bin/trelly-mcp` from the
+  active workspace directory.
+
 ## [0.3.6] - 2026-07-11
 
 ### Changed
@@ -181,7 +189,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 Early public releases — CLI + MCP foundation, multi-profile auth, kanban TUI, search,
 webhooks, `trelly api` escape hatch. See git history before `v0.2.0` for details.
 
-[Unreleased]: https://github.com/brandonkramer/trelly/compare/v0.3.6...HEAD
+[Unreleased]: https://github.com/brandonkramer/trelly/compare/v0.3.7...HEAD
+[0.3.7]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.7
 [0.3.6]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.6
 [0.3.5]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.5
 [0.3.4]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.4

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import {
   chmodSync,
   existsSync,
@@ -82,6 +83,41 @@ describe("plugin installation planning", () => {
     assert.equal(cursorStatus?.valid, false);
     assert.match(cursorStatus?.issue ?? "", /root mcp\.json is missing/);
     assert.match(cursorStatus?.warnings?.[0] ?? "", /standalone Trelly MCP/);
+  });
+
+  it("resolves Cursor's bundled MCP launcher outside the plugin directory", () => {
+    const home = makeDirectory();
+    const workingDirectory = makeDirectory();
+    const launcher = join(
+      home,
+      ".cursor",
+      "plugins",
+      "local",
+      "trelly",
+      "bin",
+      "trelly-mcp",
+    );
+    mkdirSync(join(launcher, ".."), { recursive: true });
+    writeFileSync(launcher, '#!/bin/sh\nprintf resolved > "$HOME/resolved"\n');
+    chmodSync(launcher, 0o755);
+    const config = JSON.parse(
+      readFileSync(join(import.meta.dirname, "..", "mcp.json"), "utf8"),
+    ) as {
+      mcpServers: { trelly: { command: string; args: string[] } };
+    };
+
+    const result = spawnSync(
+      config.mcpServers.trelly.command,
+      config.mcpServers.trelly.args,
+      {
+        cwd: workingDirectory,
+        env: { ...process.env, HOME: home, PATH: "/usr/bin:/bin" },
+        encoding: "utf8",
+      },
+    );
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(readFileSync(join(home, "resolved"), "utf8"), "resolved");
   });
 });
 
