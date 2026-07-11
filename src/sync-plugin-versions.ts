@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -30,4 +31,14 @@ for (const manifest of manifests) {
   );
   writeFileSync(path, updated);
   console.log(`${manifest} → ${packageJson.version}`);
+}
+
+if (process.env.npm_lifecycle_event === "version") {
+  const staged = spawnSync("git", ["add", ...manifests], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  if (staged.status !== 0) {
+    throw new Error(staged.stderr || "could not stage synchronized plugin manifests");
+  }
 }
