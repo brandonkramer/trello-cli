@@ -3,6 +3,7 @@
   Content-Security-Policy: default-src 'none'; script-src 'self' https://p.trellocdn.com; style-src 'self'; img-src 'self'; base-uri 'self'; frame-ancestors https://trello.com https://*.trello.com
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), usb=(), xr-spatial-tracking=()
 
 /privacy.html
   Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self'; base-uri 'self'; frame-ancestors https://trello.com https://*.trello.com
