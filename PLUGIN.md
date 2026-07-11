@@ -33,6 +33,14 @@ TTLs, concurrent request deduplication, and mutation-aware invalidation. Read to
 
 ## Install by platform
 
+Install every detected supported agent plugin, or select hosts explicitly:
+
+```bash
+trelly install
+trelly install --cursor --claude
+trelly install --codex --yes
+```
+
 | Platform | Doc section |
 |----------|-------------|
 | Pi | [skills/README.md — Pi](skills/README.md#pi) |
@@ -47,7 +55,7 @@ TTLs, concurrent request deduplication, and mutation-aware invalidation. Read to
 | Path | Purpose |
 |------|---------|
 | `.cursor-plugin/plugin.json` | Cursor manifest |
-| `.cursor-plugin/mcp.json` | Cursor MCP (bundled `bin/trelly-mcp`) |
+| `mcp.json` | Cursor MCP (bundled `bin/trelly-mcp`) |
 | `.claude-plugin/plugin.json` | Claude Code manifest + inline MCP wiring |
 | `.codex-plugin/plugin.json` | Codex manifest + inline MCP (`./bin/trelly-mcp`) |
 | `.antigravity-plugin/plugin.json` | Google Antigravity manifest |
@@ -61,7 +69,7 @@ TTLs, concurrent request deduplication, and mutation-aware invalidation. Read to
 Symlinks are unreliable in Cursor plugins — **copy** the repo:
 
 ```bash
-./bin/install-cursor-plugin-local.sh
+./bin/trelly install --cursor --yes --force
 ```
 
 Then **Developer: Reload Window** in Cursor. Verify MCP **trelly** is connected and skills
@@ -70,9 +78,7 @@ appear. Run `trelly auth list` in a terminal if tools return auth errors.
 ## Test locally (Claude Code)
 
 ```bash
-claude plugin install /absolute/path/to/trelly
-# or after npm install -g trelly:
-claude plugin install "$(npm root -g)/trelly"
+./bin/trelly install --claude --yes --force
 ```
 
 Reload Claude Code. Confirm MCP server **trelly** and skills load.

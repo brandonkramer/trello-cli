@@ -7,6 +7,7 @@ import { registerBoardCommands } from "./commands/boards.ts";
 import { registerCardCommands } from "./commands/cards.ts";
 import { registerChecklistCommands } from "./commands/checklists.ts";
 import { registerCustomFieldCommands } from "./commands/custom-fields.ts";
+import { registerInstallCommand } from "./commands/install.ts";
 import { registerLabelCommands } from "./commands/labels.ts";
 import { registerListCommands } from "./commands/lists.ts";
 import { registerMemberCommands } from "./commands/members.ts";
@@ -41,6 +42,7 @@ registerOrgCommands(program);
 registerActionCommands(program);
 registerApiCommand(program);
 registerUiCommand(program);
+registerInstallCommand(program);
 registerUpdateCommand(program);
 
 program.parseAsync(process.argv).catch((err) => {

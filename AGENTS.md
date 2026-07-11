@@ -13,6 +13,7 @@ indents it).
 - `src/auth/` — profiles in `~/.config/trelly/config.json` (migrates from
   `~/.config/trello-cli/`), loopback browser flow
 - `src/cli/` — commander program: `index.ts`, `context.ts`, `commands/`, `ui/` (ink kanban TUI)
+- `src/install.ts`, `src/update.ts` — agent plugin installation and CLI/plugin updates
 - `src/mcp/` — `server.ts`, `tools/` (tool registrations), `handlers.ts`, in-process
   GET cache in `cache.ts`
 - `powerup/` — standalone Trello Power-Up iframe assets deployed to `tr3lly.dev`

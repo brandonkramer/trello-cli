@@ -47,16 +47,21 @@ trelly auth login
 trelly auth list
 ```
 
-### 2. Cursor — plugin or `~/.cursor/mcp.json`
+### 2. Agent plugin or standalone MCP
 
-**Plugin (skills + MCP):** after `npm install -g trelly`:
+**Plugin (skills + MCP):** install every detected host or select one:
 
 ```bash
-cp -R "$(npm root -g)/trelly" ~/.cursor/plugins/local/trelly
-# or from clone: ./bin/install-cursor-plugin-local.sh
+trelly install
+trelly install --cursor       # or --claude / --codex
+trelly install --all --yes    # non-interactive
+trelly install --check        # read-only validation
 ```
 
-**MCP only** — `~/.cursor/mcp.json`:
+The installer validates manifests, skills, and MCP launchers, repairing broken
+same-version installations. Follow its reload instructions afterward.
+
+**MCP only** — for example, `~/.cursor/mcp.json`:
 
 ```json
 {

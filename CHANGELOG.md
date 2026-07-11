@@ -7,6 +7,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [Unreleased]
 
+## [0.3.5] - 2026-07-11
+
+### Added
+
+- `trelly install` detects Cursor, Claude Code, and Codex; interactively installs all
+  available plugins or accepts `--cursor`, `--claude`, `--codex`, `--all`, `--yes`,
+  `--check`, and `--force`; validates same-version installations and repairs broken ones.
+
+### Fixed
+
+- Cursor plugin MCP configuration now ships at the plugin root where Cursor resolves the
+  manifest's `mcpServers` path, allowing both Cursor and Cursor Agent to discover Trelly.
+
 ## [0.3.4] - 2026-07-11
 
 ### Added
@@ -155,7 +168,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 Early public releases — CLI + MCP foundation, multi-profile auth, kanban TUI, search,
 webhooks, `trelly api` escape hatch. See git history before `v0.2.0` for details.
 
-[Unreleased]: https://github.com/brandonkramer/trelly/compare/v0.3.4...HEAD
+[Unreleased]: https://github.com/brandonkramer/trelly/compare/v0.3.5...HEAD
+[0.3.5]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.5
 [0.3.4]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.4
 [0.3.3]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.3
 [0.3.2]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.2

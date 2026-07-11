@@ -709,7 +709,7 @@ function cliUpdateCommand(
   return undefined;
 }
 
-function atomicCopy(source: string, destination: string): void {
+export function atomicCopy(source: string, destination: string): void {
   const parent = dirname(destination);
   mkdirSync(parent, { recursive: true });
   const temporary = join(parent, `.${basename(destination)}.update-${process.pid}`);

@@ -36,6 +36,18 @@ No Bun? `npm install` in the clone — tsx is the fallback runtime.
 
 Optional: `bun link` / `npm link`, or add `bin/` to `PATH`.
 
+### Agent plugins
+
+```bash
+trelly install                 # choose all detected agent hosts
+trelly install --cursor        # or --claude / --codex
+trelly install --all --yes     # non-interactive
+trelly install --check         # inspect without changing anything
+```
+
+The installer validates and repairs same-version plugins as well as installing missing
+ones. Reload the selected agent hosts using the instructions printed afterward.
+
 ### Updating
 
 ```bash
@@ -145,7 +157,7 @@ Flags: `-p, --profile <name>`, `--json`, `--pretty` (with `--json` only).
 
 ### Command reference
 
-Top-level: `auth` · `boards` · `lists` · `cards` · `checklists` · `labels` · `custom-fields` · `search` · `webhooks` · `members` · `orgs` · `actions` · `api` · `ui` · `update`
+Top-level: `auth` · `boards` · `lists` · `cards` · `checklists` · `labels` · `custom-fields` · `search` · `webhooks` · `members` · `orgs` · `actions` · `api` · `ui` · `install` · `update`
 
 | Group | Subcommands |
 |-------|-------------|
@@ -163,6 +175,7 @@ Top-level: `auth` · `boards` · `lists` · `cards` · `checklists` · `labels` 
 | **actions** | `get` |
 | **api** | raw REST (`-X`, `--path`, `--query`, `--body`) |
 | **ui** | `[boardId]` — or run bare `trelly` |
+| **install** | `--cursor` · `--claude` · `--codex` · `--all` · `--yes` · `--check` · `--force` |
 | **update** | `--check` · `--yes` · `--cli-only` · `--plugins-only` |
 
 List-type custom field values: use `trelly api` with `PUT /cards/{id}/customField/{fieldId}/item` and `{"idValue":"..."}` (see [skills/trelly/SKILL.md](skills/trelly/SKILL.md)).
@@ -268,9 +281,9 @@ Skills + IDE plugins ship in the npm package so agents learn CLI/MCP conventions
 | Platform | Install |
 |----------|---------|
 | **Pi** | `pi install npm:trelly` (skills + CLI only) |
-| **Claude Code** | `claude plugin install "$(npm root -g)/trelly"` → reload |
-| **Cursor** | `cp -R "$(npm root -g)/trelly" ~/.cursor/plugins/local/trelly` → reload window |
-| **Codex** | Local marketplace → `/plugins` → install Trelly |
+| **Claude Code** | `trelly install --claude` → reload |
+| **Cursor** | `trelly install --cursor` → reload window |
+| **Codex** | `trelly install --codex` → new thread |
 | **Antigravity** | `agy plugin install "$(npm root -g)/trelly/.antigravity-plugin"` |
 
 ```bash

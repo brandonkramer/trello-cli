@@ -24,11 +24,14 @@ npm install -g trelly    # or: brew install brandonkramer/tap/trelly
 trelly auth setup        # API key from https://trello.com/power-ups/admin
 trelly auth login        # browser → ~/.config/trelly/config.json
 trelly auth list         # verify
+trelly install           # install plugins for detected agent hosts
 ```
 
-After installation, `trelly update --check` detects the owning package manager and any
-installed Cursor, Claude Code, or Codex plugin. Run `trelly update --yes` to refresh them;
-platform-specific update commands below remain available as manual fallbacks.
+Use `trelly install --cursor`, `--claude`, or `--codex` to select individual hosts;
+combine flags or use `--all --yes` for automation. After installation, run
+`trelly update --check` to inspect the package manager and installed plugins, then
+`trelly update --yes` to refresh them. Platform-specific commands below remain manual
+fallbacks.
 
 ---
 
@@ -37,9 +40,9 @@ platform-specific update commands below remain available as manual fallbacks.
 | Platform | Recommended install | Skills | MCP | Notes |
 |----------|---------------------|--------|-----|--------|
 | **Pi** | `pi install npm:trelly` | ✅ | ❌ | CLI/bash only; use human `trelly lists cards` |
-| **Claude Code** | `claude plugin install "$(npm root -g)/trelly"` | ✅ | ✅ | Reload after install |
-| **Cursor** | Copy plugin → `~/.cursor/plugins/local/trelly` | ✅ | ✅ | **Copy**, not symlink |
-| **Codex** | Local marketplace + `/plugins` install | ✅ | ✅ | See Codex section below |
+| **Claude Code** | `trelly install --claude` | ✅ | ✅ | Reload after install |
+| **Cursor** | `trelly install --cursor` | ✅ | ✅ | **Copy**, not symlink |
+| **Codex** | `trelly install --codex` | ✅ | ✅ | Start a new thread |
 | **Antigravity** | `agy plugin install "$(npm root -g)/trelly"` | ✅ | ✅ | Staged in config directory |
 
 **MCP-only** (tools, no skills): add `trelly-mcp` to your IDE MCP config — [MCP only](#mcp-only-all-ides).
@@ -95,14 +98,13 @@ Full **plugin** = skills + MCP (`trelly-mcp` via bundled `bin/`).
 ```bash
 npm install -g trelly
 trelly auth setup && trelly auth login
-
-claude plugin install "$(npm root -g)/trelly"
+trelly install --claude
 ```
 
 From a git clone instead of npm:
 
 ```bash
-claude plugin install /absolute/path/to/trelly
+./bin/trelly install --claude
 ```
 
 **Reload Claude Code** after install.
@@ -152,15 +154,13 @@ package directory.
 ```bash
 npm install -g trelly
 trelly auth setup && trelly auth login
-
-rm -rf ~/.cursor/plugins/local/trelly
-cp -R "$(npm root -g)/trelly" ~/.cursor/plugins/local/trelly
+trelly install --cursor
 ```
 
 From a repo clone:
 
 ```bash
-cd /path/to/trelly && ./bin/install-cursor-plugin-local.sh
+cd /path/to/trelly && ./bin/trelly install --cursor
 ```
 
 **Developer: Reload Window** in Cursor (or restart). Confirm MCP **trelly** is connected.
@@ -209,17 +209,16 @@ Claude has its own inline launch configuration in `.claude-plugin/plugin.json`.
 
 ### Install (recommended — local marketplace)
 
-One-time setup:
+The installer creates or merges the local marketplace entry without replacing unrelated
+entries:
 
 ```bash
 npm install -g trelly
 trelly auth setup && trelly auth login
-
-mkdir -p ~/.agents/plugins
-ln -sf "$(npm root -g)/trelly" ~/.agents/plugins/trelly
+trelly install --codex
 ```
 
-Create or merge `~/.agents/plugins/marketplace.json`:
+Manual fallback: create or merge `~/.agents/plugins/marketplace.json`:
 
 ```json
 {
@@ -336,7 +335,7 @@ When you only want Trello **tools** in chat (no bundled skills):
 | `.antigravity-plugin/` | Google Antigravity plugin manifest & MCP config |
 | `.claude-plugin/plugin.json` | Claude Code plugin + inline MCP wiring |
 | `.codex-plugin/plugin.json` | Codex plugin + inline MCP wiring |
-| `.cursor-plugin/` + `.cursor-plugin/mcp.json` | Cursor plugin + MCP wiring |
+| `.cursor-plugin/plugin.json` + `mcp.json` | Cursor plugin + MCP wiring |
 | `package.json` `"pi"` | Pi skills path |
 
 Skills teach agents *how* to use trelly. MCP config tells the IDE *how to spawn*
