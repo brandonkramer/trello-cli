@@ -39,12 +39,18 @@ Optional: `bun link` / `npm link`, or add `bin/` to `PATH`.
 ### Updating
 
 ```bash
-npm update -g trelly          # or: npm install -g trelly@latest
-brew upgrade trelly           # Homebrew
+trelly update --check         # inspect CLI + installed agent plugins
+trelly update --yes           # update without an interactive confirmation
 ```
 
-Auth in `~/.config/trelly/config.json` is kept across upgrades. Reload your IDE after
-updating if you use the agent plugin MCP server.
+`trelly update` detects npm, Bun, Homebrew, source checkouts, and ephemeral
+`npx`/`bunx` runs, then uses the owning package manager. It refreshes detected Cursor,
+Claude Code, and Codex plugins; use `--cli-only` or `--plugins-only` to limit scope.
+Source checkouts and Codex plugin sources with uncommitted changes are never modified.
+Add the global `--json` flag for automation.
+
+Auth in `~/.config/trelly/config.json` is kept across upgrades. Follow the printed restart
+instructions for updated agent plugins.
 
 ## Quick start
 
@@ -139,7 +145,7 @@ Flags: `-p, --profile <name>`, `--json`, `--pretty` (with `--json` only).
 
 ### Command reference
 
-Top-level: `auth` · `boards` · `lists` · `cards` · `checklists` · `labels` · `custom-fields` · `search` · `webhooks` · `members` · `orgs` · `actions` · `api` · `ui`
+Top-level: `auth` · `boards` · `lists` · `cards` · `checklists` · `labels` · `custom-fields` · `search` · `webhooks` · `members` · `orgs` · `actions` · `api` · `ui` · `update`
 
 | Group | Subcommands |
 |-------|-------------|
@@ -157,6 +163,7 @@ Top-level: `auth` · `boards` · `lists` · `cards` · `checklists` · `labels` 
 | **actions** | `get` |
 | **api** | raw REST (`-X`, `--path`, `--query`, `--body`) |
 | **ui** | `[boardId]` — or run bare `trelly` |
+| **update** | `--check` · `--yes` · `--cli-only` · `--plugins-only` |
 
 List-type custom field values: use `trelly api` with `PUT /cards/{id}/customField/{fieldId}/item` and `{"idValue":"..."}` (see [skills/trelly/SKILL.md](skills/trelly/SKILL.md)).
 

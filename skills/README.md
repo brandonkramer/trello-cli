@@ -26,6 +26,10 @@ trelly auth login        # browser → ~/.config/trelly/config.json
 trelly auth list         # verify
 ```
 
+After installation, `trelly update --check` detects the owning package manager and any
+installed Cursor, Claude Code, or Codex plugin. Run `trelly update --yes` to refresh them;
+platform-specific update commands below remain available as manual fallbacks.
+
 ---
 
 ## Quick pick

@@ -85,6 +85,7 @@ trelly cards add-attachment CARD_ID --url "https://github.com/org/repo/pull/42"
 trelly search "query"
 trelly ui BOARD_ID                    # interactive kanban (TTY required)
 trelly auth list
+trelly update --check                 # CLI + installed plugin updates
 ```
 
 Global: `-p, --profile <name>` (or `TRELLO_PROFILE`).
@@ -219,6 +220,19 @@ trelly -p work boards list
 ```
 
 Env override: `TRELLO_APP_API_KEY`, `TRELLO_API_KEY`, `TRELLO_TOKEN`, `TRELLO_PROFILE`.
+
+## Updating trelly and agent plugins
+
+```bash
+trelly update --check
+trelly update --yes
+trelly --json update --check
+```
+
+The command detects npm, Bun, Homebrew, source, and ephemeral installs. It refreshes only
+detected Cursor, Claude Code, and Codex plugins. Use `--cli-only` or `--plugins-only` to
+limit scope. Never bypass a dirty source-checkout refusal; commit, stash, or discard those
+changes explicitly first.
 
 ## MCP vs CLI
 

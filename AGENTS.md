@@ -44,6 +44,9 @@ Run all three checks before committing.
 - Never read, log, or commit credentials (`~/.config/trelly/config.json`);
   auth goes in the `Authorization` header, never in URLs
 - No live Trello API calls in tests
+- Update logic must spawn package managers and plugin CLIs with argument arrays, never shell
+  command strings. Tests must mock registry/process calls and must never mutate real installs;
+  source updates must refuse dirty worktrees.
 - The Power-Up must work inside Trello without the CLI, MCP, browser extensions, or local
   agents. Never request or pass CLI/MCP credentials from a Power-Up iframe; keep security
   headers in `powerup/_headers` aligned with every hosted iframe.

@@ -7,6 +7,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [Unreleased]
 
+### Added
+
+- `trelly update` detects npm, Bun, Homebrew, source, and ephemeral installs; checks the
+  registry; refreshes detected Cursor, Claude Code, and Codex plugins; supports `--check`,
+  `--yes`, `--json`, `--cli-only`, and `--plugins-only`; and refuses dirty source trees.
+
 ### Fixed
 
 - Codex plugin MCP startup now uses a host-compatible inline relative command instead of
