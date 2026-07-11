@@ -1,16 +1,23 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { profileField, toolEnvelopeSchema, withClient } from "../handlers.ts";
+import {
+  freshField,
+  profileField,
+  readAnnotations,
+  toolEnvelopeSchemaFor,
+  withClient,
+} from "../handlers.ts";
+import { trelloBoardSchema, trelloCardSchema } from "../schemas.ts";
 
 export function registerSearchTools(server: McpServer): void {
-  const outputSchema = toolEnvelopeSchema;
-
   server.registerTool(
     "trello_search",
     {
+      title: "Search Trello",
       description: "Search Trello for cards, boards, members, and actions.",
       inputSchema: {
         profile: profileField,
+        fresh: freshField,
         query: z.string().min(1),
         modelTypes: z.string().optional(),
         cardsLimit: z.number().int().positive().optional(),
@@ -18,11 +25,17 @@ export function registerSearchTools(server: McpServer): void {
         cardFields: z.string().default("id,name,idList,shortUrl"),
         boardFields: z.string().default("id,name,shortUrl"),
       },
-      annotations: { readOnlyHint: true },
-      outputSchema,
+      annotations: readAnnotations,
+      outputSchema: toolEnvelopeSchemaFor(
+        z.looseObject({
+          cards: z.array(trelloCardSchema).optional(),
+          boards: z.array(trelloBoardSchema).optional(),
+        }),
+      ),
     },
     async ({
       profile,
+      fresh,
       query,
       modelTypes,
       cardsLimit,
@@ -30,14 +43,17 @@ export function registerSearchTools(server: McpServer): void {
       cardFields,
       boardFields,
     }) =>
-      withClient(profile, (client) =>
-        client.search(query, {
-          modelTypes,
-          cards_limit: cardsLimit,
-          boards_limit: boardsLimit,
-          card_fields: cardFields,
-          board_fields: boardFields,
-        }),
+      withClient(
+        profile,
+        (client) =>
+          client.search(query, {
+            modelTypes,
+            cards_limit: cardsLimit,
+            boards_limit: boardsLimit,
+            card_fields: cardFields,
+            board_fields: boardFields,
+          }),
+        fresh,
       ),
   );
 }

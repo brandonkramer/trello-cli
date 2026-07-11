@@ -7,6 +7,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [Unreleased]
 
+### Added
+
+- Selective `trello_board_context` and `trello_card_context` reads with field controls;
+  board card context includes the standard pre-rendered `display`.
+- Dedicated MCP attachment tools, name/URL resolution, typed output schemas, complete
+  safety annotations, and separate read/write raw REST tools.
+
+### Changed
+
+- MCP surface reduced to 30 focused tools. Board/card context replaces six overlapping
+  atomic read tools; the legacy combined `trello_api` tool was removed.
+- Comment mutations use consistent create/update/delete naming; comment reads moved into
+  `trello_card_context`.
+
 ## [0.3.2] - 2026-07-04
 
 ### Added

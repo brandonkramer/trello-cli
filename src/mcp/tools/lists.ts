@@ -1,18 +1,21 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import {
+  createAnnotations,
+  freshField,
   profileField,
-  toolEnvelopeSchema,
+  readAnnotations,
+  toolEnvelopeSchemaFor,
   withCardListResult,
   withClient,
 } from "../handlers.ts";
+import { trelloCardSchema, trelloListSchema } from "../schemas.ts";
 
 export function registerListTools(server: McpServer): void {
-  const outputSchema = toolEnvelopeSchema;
-
   server.registerTool(
     "trello_list_create",
     {
+      title: "Create Trello list",
       description: "Create a list on a board.",
       inputSchema: {
         profile: profileField,
@@ -20,7 +23,8 @@ export function registerListTools(server: McpServer): void {
         name: z.string().min(1),
         position: z.string().optional(),
       },
-      outputSchema,
+      annotations: createAnnotations,
+      outputSchema: toolEnvelopeSchemaFor(trelloListSchema),
     },
     async ({ profile, boardId, name, position }) =>
       withClient(profile, (client) =>
@@ -31,10 +35,12 @@ export function registerListTools(server: McpServer): void {
   server.registerTool(
     "trello_list_cards",
     {
+      title: "List Trello list cards",
       description:
         "List cards in a list. Response includes `display` (markdown-v1, linked titles + 💬📎✓⏰ badges) — when the user should SEE cards, paste `display` verbatim; do not reformat as a plain title list.",
       inputSchema: {
         profile: profileField,
+        fresh: freshField,
         listId: z.string().min(1),
         fields: z
           .string()
@@ -47,14 +53,15 @@ export function registerListTools(server: McpServer): void {
             'Optional markdown heading prepended to `display` (e.g. "**My Board → To do**")',
           ),
       },
-      annotations: { readOnlyHint: true },
-      outputSchema,
+      annotations: readAnnotations,
+      outputSchema: toolEnvelopeSchemaFor(z.array(trelloCardSchema)),
     },
-    async ({ profile, listId, fields, displayHeading }) =>
+    async ({ profile, fresh, listId, fields, displayHeading }) =>
       withCardListResult(
         profile,
         (client) => client.listCards(listId, { fields }),
         displayHeading,
+        fresh,
       ),
   );
 }

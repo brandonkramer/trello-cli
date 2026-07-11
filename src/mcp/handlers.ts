@@ -1,12 +1,16 @@
-import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import type {
+  CallToolResult,
+  ToolAnnotations,
+} from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { type JsonValue, type TrelloClient, TrelloError } from "../api/client.ts";
-import { getClient } from "../cli/context.ts";
+import { resolveProfile } from "../auth/profiles.ts";
 import {
   CARD_LIST_DISPLAY_FORMAT,
   type CardDisplayInput,
   formatCardListMarkdown,
 } from "../util/card-display.ts";
+import { CachedMcpTrelloClient } from "./cache.ts";
 
 export const toolEnvelopeSchema = z.object({
   ok: z.boolean(),
@@ -20,9 +24,61 @@ export const toolEnvelopeSchema = z.object({
   details: z.unknown().optional(),
 });
 
+export function toolEnvelopeSchemaFor<T extends z.ZodType>(dataSchema: T) {
+  return toolEnvelopeSchema.extend({ data: dataSchema.optional() });
+}
+
+export const localReadAnnotations: ToolAnnotations = {
+  readOnlyHint: true,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: false,
+};
+
+export const readAnnotations: ToolAnnotations = {
+  readOnlyHint: true,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: true,
+};
+
+export const createAnnotations: ToolAnnotations = {
+  readOnlyHint: false,
+  destructiveHint: false,
+  idempotentHint: false,
+  openWorldHint: true,
+};
+
+export const updateAnnotations: ToolAnnotations = {
+  readOnlyHint: false,
+  destructiveHint: true,
+  idempotentHint: true,
+  openWorldHint: true,
+};
+
+export const deleteAnnotations: ToolAnnotations = {
+  readOnlyHint: false,
+  destructiveHint: true,
+  idempotentHint: false,
+  openWorldHint: true,
+};
+
 export type ToolEnvelope = z.infer<typeof toolEnvelopeSchema>;
 
 export const profileField = z.string().optional().describe("Auth profile name");
+export const freshField = z
+  .boolean()
+  .optional()
+  .default(false)
+  .describe("Bypass the MCP response cache and fetch fresh data from Trello");
+
+function getMcpClient(profile: string | undefined, fresh = false) {
+  const { name, profile: creds } = resolveProfile(profile);
+  return {
+    profileName: name,
+    client: new CachedMcpTrelloClient(creds.apiKey, creds.token, name, fresh),
+  };
+}
 
 export function toolResult(envelope: ToolEnvelope): CallToolResult {
   const text =
@@ -95,9 +151,10 @@ export async function withCardListResult(
   profile: string | undefined,
   fn: (client: TrelloClient) => Promise<unknown>,
   heading?: string,
+  fresh = false,
 ): Promise<CallToolResult> {
   try {
-    const { profileName, client } = getClient(profile);
+    const { profileName, client } = getMcpClient(profile, fresh);
     const raw = await fn(client);
     const cards = slimCards(raw);
     const arr = Array.isArray(cards) ? (cards as CardDisplayInput[]) : [];
@@ -126,11 +183,27 @@ export async function withCardListResult(
 export async function withClient<T>(
   profile: string | undefined,
   fn: (client: TrelloClient, profileName: string) => Promise<T>,
+  fresh = false,
+): Promise<CallToolResult> {
+  return withClientEnvelope(
+    profile,
+    async (client, profileName) => ({ data: await fn(client, profileName) }),
+    fresh,
+  );
+}
+
+export async function withClientEnvelope(
+  profile: string | undefined,
+  fn: (
+    client: TrelloClient,
+    profileName: string,
+  ) => Promise<Pick<ToolEnvelope, "data" | "display" | "displayFormat">>,
+  fresh = false,
 ): Promise<CallToolResult> {
   try {
-    const { profileName, client } = getClient(profile);
-    const data = await fn(client, profileName);
-    return toolResult({ ok: true, profile: profileName, data });
+    const { profileName, client } = getMcpClient(profile, fresh);
+    const envelope = await fn(client, profileName);
+    return toolResult({ ok: true, profile: profileName, ...envelope });
   } catch (err) {
     if (err instanceof TrelloError) {
       return toolResult({
@@ -153,8 +226,11 @@ export async function runApi(
   path: string,
   query: Record<string, string> | undefined,
   body: JsonValue | undefined,
+  fresh = false,
 ): Promise<CallToolResult> {
-  return withClient(profile, (client) =>
-    client.request(method.toUpperCase(), path, query ?? {}, body),
+  return withClient(
+    profile,
+    (client) => client.request(method.toUpperCase(), path, query ?? {}, body),
+    fresh,
   );
 }

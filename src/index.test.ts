@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { TrelloClient } from "./api/client.ts";
 import { parseTrelloResponse, trelloErrorMessage } from "./api/http.ts";
 import { authLoginUrl } from "./auth/profiles.ts";
 import { parseKvPairs } from "./cli/context.ts";
@@ -60,6 +61,35 @@ describe("trello HTTP helpers", () => {
       "invalid token",
     );
     assert.equal(trelloErrorMessage(null, 500), "Trello API 500");
+  });
+});
+
+describe("TrelloClient comment mutations", () => {
+  it("edits and permanently deletes comments through card action endpoints", async () => {
+    const requests: Array<{ init: RequestInit | undefined; url: URL }> = [];
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async (input, init) => {
+      requests.push({ init, url: new URL(String(input)) });
+      return new Response("{}", {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    };
+
+    try {
+      const client = new TrelloClient("key", "token");
+      await client.cardEditComment("card", "comment", "Updated text");
+      await client.cardDeleteComment("card", "comment");
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+
+    assert.equal(requests.length, 2);
+    assert.equal(requests[0]?.init?.method, "PUT");
+    assert.equal(requests[0]?.url.pathname, "/1/cards/card/actions/comment/comments");
+    assert.equal(requests[0]?.url.searchParams.get("text"), "Updated text");
+    assert.equal(requests[1]?.init?.method, "DELETE");
+    assert.equal(requests[1]?.url.pathname, "/1/cards/card/actions/comment/comments");
   });
 });
 

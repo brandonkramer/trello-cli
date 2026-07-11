@@ -1,0 +1,8 @@
+/*
+  Strict-Transport-Security: max-age=15552000
+  Content-Security-Policy: default-src 'none'; script-src 'self' https://p.trellocdn.com; style-src 'self'; img-src 'self'; base-uri 'self'; frame-ancestors https://trello.com https://*.trello.com
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/privacy.html
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self'; base-uri 'self'; frame-ancestors https://trello.com https://*.trello.com

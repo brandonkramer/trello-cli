@@ -26,22 +26,3 @@ function copyFallback(text) {
     ta.remove();
   }
 }
-
-function mcpSnippet() {
-  return [
-    '"trelly": {',
-    '  "command": "trelly-mcp",',
-    '  "env": { "TRELLO_PROFILE": "default" }',
-    "}",
-  ].join("\n");
-}
-
-function agentPrompt(card) {
-  return (
-    "Work on this Trello card using the trelly MCP tools: " +
-    card.shortUrl +
-    " (card id " +
-    card.id +
-    "). Prefer archive over delete."
-  );
-}

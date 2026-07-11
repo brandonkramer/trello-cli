@@ -159,6 +159,14 @@ export class TrelloClient {
     return this.get(`/cards/${id}`, query);
   }
 
+  cardBoard(id: string, query: Query = {}) {
+    return this.get(`/cards/${id}/board`, query);
+  }
+
+  cardList(id: string, query: Query = {}) {
+    return this.get(`/cards/${id}/list`, query);
+  }
+
   cardCreate(query: Query) {
     return this.post("/cards", query);
   }
@@ -179,6 +187,15 @@ export class TrelloClient {
 
   cardComment(id: string, text: string) {
     return this.post(`/cards/${id}/actions/comments`, { text });
+  }
+
+  cardEditComment(id: string, commentId: string, text: string) {
+    return this.put(`/cards/${id}/actions/${commentId}/comments`, { text });
+  }
+
+  /** Permanently delete a comment. Irreversible. */
+  cardDeleteComment(id: string, commentId: string) {
+    return this.delete(`/cards/${id}/actions/${commentId}/comments`);
   }
 
   cardMembers(id: string, query: Query = {}) {
@@ -216,8 +233,12 @@ export class TrelloClient {
     });
   }
 
-  cardAttachments(id: string) {
-    return this.get(`/cards/${id}/attachments`);
+  cardAttachments(id: string, query: Query = {}) {
+    return this.get(`/cards/${id}/attachments`, query);
+  }
+
+  cardChecklists(id: string) {
+    return this.get(`/cards/${id}/checklists`);
   }
 
   cardAddAttachment(id: string, query: Query) {

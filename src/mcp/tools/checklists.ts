@@ -1,20 +1,26 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { profileField, toolEnvelopeSchema, withClient } from "../handlers.ts";
+import {
+  createAnnotations,
+  profileField,
+  toolEnvelopeSchemaFor,
+  withClient,
+} from "../handlers.ts";
+import { trelloChecklistSchema } from "../schemas.ts";
 
 export function registerChecklistTools(server: McpServer): void {
-  const outputSchema = toolEnvelopeSchema;
-
   server.registerTool(
     "trello_checklist_create",
     {
+      title: "Create Trello checklist",
       description: "Create a checklist on a card.",
       inputSchema: {
         profile: profileField,
         cardId: z.string().min(1),
         name: z.string().min(1),
       },
-      outputSchema,
+      annotations: createAnnotations,
+      outputSchema: toolEnvelopeSchemaFor(trelloChecklistSchema),
     },
     async ({ profile, cardId, name }) =>
       withClient(profile, (client) => client.checklistCreate({ idCard: cardId, name })),
@@ -23,6 +29,7 @@ export function registerChecklistTools(server: McpServer): void {
   server.registerTool(
     "trello_checklist_add_item",
     {
+      title: "Add Trello checklist item",
       description: "Add an item to a checklist.",
       inputSchema: {
         profile: profileField,
@@ -30,7 +37,8 @@ export function registerChecklistTools(server: McpServer): void {
         name: z.string().min(1),
         checked: z.boolean().optional(),
       },
-      outputSchema,
+      annotations: createAnnotations,
+      outputSchema: toolEnvelopeSchemaFor(z.looseObject({ id: z.string() })),
     },
     async ({ profile, checklistId, name, checked }) =>
       withClient(profile, (client) =>

@@ -9,11 +9,15 @@
 </head>
 <body>
   <div id="content">
-    <button type="button" class="row" id="copy-id">Card ID</button>
-    <button type="button" class="row primary" id="copy-url">Card URL</button>
+    <div class="counts" id="counts"></div>
+    <ul class="attachments" id="attachments"></ul>
+    <div class="copybar">
+      <button type="button" id="copy-url">Copy card URL</button>
+      <button type="button" id="copy-id">Copy card ID</button>
+    </div>
   </div>
   <script src="https://p.trellocdn.com/power-up.min.js"></script>
   <script src="./js/util.js"></script>
-  <script src="./js/copy.js"></script>
+  <script src="./js/section.js"></script>
 </body>
 </html>

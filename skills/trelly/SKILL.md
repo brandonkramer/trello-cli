@@ -13,6 +13,18 @@ description: >-
 Fast Trello CLI (`npm install -g trelly`). **Human Trello-styled output by default**;
 **`--json` for scripts**. Commands: **`trelly`** or **`trello`** (same binary).
 
+## Routing: prefer MCP in agent hosts
+
+When running inside Cursor, Codex, Claude, or another MCP-capable agent host, first
+check whether `trello_*` MCP tools are available. If they are, use those tools for
+normal Trello work instead of spawning the `trelly` CLI. This includes search,
+boards, lists, cards, comments, attachments, and other REST operations.
+
+Use the CLI only when the user explicitly asks for terminal commands or shell
+automation, MCP is unavailable, or the task requires the interactive `trelly ui`.
+If MCP is available but a tool call fails, report the failure before falling back
+to the CLI.
+
 > **Showing cards to a user?** Read [trelly-card-display.md](trelly-card-display.md).
 > Pi has no MCP — use **human CLI** (`trelly lists cards LIST_ID` without `--json`)
 > or format per that contract. Never reply with titles-only.
@@ -66,6 +78,8 @@ trelly cards comments CARD_ID
 trelly cards create --list LIST_ID --name "Task"
 trelly cards move CARD_ID --list OTHER_LIST_ID
 trelly cards comment CARD_ID --text "Done"
+trelly cards edit-comment CARD_ID COMMENT_ID --text "Updated"
+trelly cards delete-comment CARD_ID COMMENT_ID # permanent
 trelly cards attachments CARD_ID
 trelly cards add-attachment CARD_ID --url "https://github.com/org/repo/pull/42"
 trelly search "query"
@@ -84,6 +98,18 @@ trelly api -X POST --path /cards --body '{"idList":"LIST_ID","name":"Hi"}'
 ```
 
 Request body flag is **`--body`** (not `--json` — that flag is global output).
+
+## Card comments
+
+```bash
+trelly cards comments CARD_ID
+trelly cards comment CARD_ID --text "Done"
+trelly cards edit-comment CARD_ID COMMENT_ID --text "Updated"
+trelly cards delete-comment CARD_ID COMMENT_ID
+```
+
+`COMMENT_ID` is the action `id` returned by `cards comments`. Comment deletion is
+**permanent** and subject to Trello permissions.
 
 ## Card attachments
 
@@ -181,7 +207,7 @@ trelly api -X PUT \
 | Action | CLI | Reversible? |
 |--------|-----|-------------|
 | Close | `cards archive`, `boards archive` | Yes (Trello UI) |
-| Destroy | `cards delete`, `boards delete` | **No** |
+| Destroy | `cards delete`, `boards delete`, `cards delete-comment` | **No** |
 
 Prefer **archive** unless the user explicitly wants permanent deletion.
 
@@ -196,5 +222,7 @@ Env override: `TRELLO_APP_API_KEY`, `TRELLO_API_KEY`, `TRELLO_TOKEN`, `TRELLO_PR
 
 ## MCP vs CLI
 
-- **CLI:** human or `--json` on stdout.
-- **MCP:** separate stdio server (`trelly-mcp`) — see **trelly-mcp** skill.
+- **MCP (default in agent hosts):** structured `trello_*` tools — see
+  **trelly-mcp** skill.
+- **CLI:** terminal use, shell automation, or interactive `trelly ui`; human or
+  `--json` on stdout.

@@ -1,4 +1,4 @@
-/* global TrelloPowerUp, applyTheme, copyText, mcpSnippet, agentPrompt */
+/* global TrelloPowerUp, applyTheme, copyText */
 
 var t = TrelloPowerUp.iframe();
 applyTheme(t);
@@ -62,7 +62,5 @@ function bind(id, getValue) {
 
 bind("copy-id", (c) => c.id);
 bind("copy-url", (c) => c.shortUrl);
-bind("copy-mcp", () => mcpSnippet());
-bind("copy-prompt", (c) => agentPrompt(c));
 
 t.render(() => t.sizeTo("#content").catch(() => {}));

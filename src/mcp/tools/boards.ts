@@ -1,21 +1,60 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import type { CardDisplayInput } from "../../util/card-display.ts";
 import {
+  cardListDisplay,
+  createAnnotations,
+  freshField,
   profileField,
-  toolEnvelopeSchema,
-  withCardListResult,
+  readAnnotations,
+  slimCards,
+  toolEnvelopeSchemaFor,
+  updateAnnotations,
   withClient,
+  withClientEnvelope,
 } from "../handlers.ts";
+import {
+  trelloBoardSchema,
+  trelloCardSchema,
+  trelloLabelSchema,
+  trelloListSchema,
+} from "../schemas.ts";
+
+type BoardContextParts = {
+  board: unknown;
+  lists?: unknown;
+  labels?: unknown;
+  cards?: unknown;
+  displayHeading?: string;
+};
+
+export function boardContextEnvelope(parts: BoardContextParts) {
+  const slimmedCards = parts.cards === undefined ? undefined : slimCards(parts.cards);
+  const cardArray = Array.isArray(slimmedCards)
+    ? (slimmedCards as CardDisplayInput[])
+    : [];
+  return {
+    data: {
+      board: parts.board,
+      ...(parts.lists === undefined ? {} : { lists: parts.lists }),
+      ...(parts.labels === undefined ? {} : { labels: parts.labels }),
+      ...(parts.cards === undefined ? {} : { cards: cardArray }),
+    },
+    ...(parts.cards === undefined
+      ? {}
+      : cardListDisplay(cardArray, parts.displayHeading)),
+  };
+}
 
 export function registerBoardTools(server: McpServer): void {
-  const outputSchema = toolEnvelopeSchema;
-
   server.registerTool(
     "trello_boards_list",
     {
+      title: "List Trello boards",
       description: "List boards visible to the authenticated member.",
       inputSchema: {
         profile: profileField,
+        fresh: freshField,
         filter: z
           .enum([
             "all",
@@ -35,35 +74,21 @@ export function registerBoardTools(server: McpServer): void {
           .default("id,name,shortUrl,closed")
           .describe('comma-separated fields, "all" for everything'),
       },
-      annotations: { readOnlyHint: true },
-      outputSchema,
+      annotations: readAnnotations,
+      outputSchema: toolEnvelopeSchemaFor(z.array(trelloBoardSchema)),
     },
-    async ({ profile, filter, fields }) =>
-      withClient(profile, (client) => client.memberBoards("me", { filter, fields })),
-  );
-
-  server.registerTool(
-    "trello_board_get",
-    {
-      description: "Get a board by id.",
-      inputSchema: {
-        profile: profileField,
-        boardId: z.string().min(1),
-        fields: z
-          .string()
-          .default("id,name,desc,shortUrl,closed")
-          .describe('comma-separated fields, "all" for everything'),
-      },
-      annotations: { readOnlyHint: true },
-      outputSchema,
-    },
-    async ({ profile, boardId, fields }) =>
-      withClient(profile, (client) => client.boardGet(boardId, { fields })),
+    async ({ profile, fresh, filter, fields }) =>
+      withClient(
+        profile,
+        (client) => client.memberBoards("me", { filter, fields }),
+        fresh,
+      ),
   );
 
   server.registerTool(
     "trello_board_create",
     {
+      title: "Create Trello board",
       description: "Create a board.",
       inputSchema: {
         profile: profileField,
@@ -72,7 +97,8 @@ export function registerBoardTools(server: McpServer): void {
         organizationId: z.string().optional(),
         defaultLists: z.boolean().optional(),
       },
-      outputSchema,
+      annotations: createAnnotations,
+      outputSchema: toolEnvelopeSchemaFor(trelloBoardSchema),
     },
     async ({ profile, name, description, organizationId, defaultLists }) =>
       withClient(profile, (client) =>
@@ -88,59 +114,93 @@ export function registerBoardTools(server: McpServer): void {
   server.registerTool(
     "trello_board_archive",
     {
+      title: "Archive Trello board",
       description: "Close (archive) a board. Reversible in the Trello UI.",
       inputSchema: { profile: profileField, boardId: z.string().min(1) },
-      annotations: { destructiveHint: true },
-      outputSchema,
+      annotations: updateAnnotations,
+      outputSchema: toolEnvelopeSchemaFor(trelloBoardSchema),
     },
     async ({ profile, boardId }) =>
       withClient(profile, (client) => client.boardArchive(boardId)),
   );
 
   server.registerTool(
-    "trello_board_lists",
+    "trello_board_context",
     {
-      description: "List lists on a board.",
-      inputSchema: {
-        profile: profileField,
-        boardId: z.string().min(1),
-        filter: z.string().optional().default("open"),
-        fields: z
-          .string()
-          .default("id,name,closed,pos")
-          .describe('comma-separated fields, "all" for everything'),
-      },
-      annotations: { readOnlyHint: true },
-      outputSchema,
-    },
-    async ({ profile, boardId, filter, fields }) =>
-      withClient(profile, (client) => client.boardLists(boardId, { filter, fields })),
-  );
-
-  server.registerTool(
-    "trello_board_cards",
-    {
+      title: "Get Trello board context",
       description:
-        "List all cards on a board. Default fields omit badges/labels — pass fields including badges,labels for rich `display`. When showing cards to the user, paste response `display` verbatim.",
+        "Get a board plus selected lists, labels, and cards. When cards are included, response `display` contains the formatted card list for users.",
       inputSchema: {
         profile: profileField,
+        fresh: freshField,
         boardId: z.string().min(1),
-        fields: z
+        include: z.array(z.enum(["lists", "labels", "cards"])).default([]),
+        boardFields: z
+          .string()
+          .default("id,name,desc,shortUrl,closed")
+          .describe('comma-separated board fields, "all" for everything'),
+        listFilter: z.string().default("open"),
+        listFields: z
+          .string()
+          .default("id,name,closed,pos,idBoard")
+          .describe('comma-separated list fields, "all" for everything'),
+        cardFields: z
           .string()
           .default("id,name,idList,due,dueComplete,shortUrl,closed,badges,labels")
           .describe(
-            'comma-separated fields, "all" for everything; badges,labels included by default for display',
+            'comma-separated card fields, "all" for everything; badges,labels included by default for display',
           ),
         displayHeading: z.string().optional(),
       },
-      annotations: { readOnlyHint: true },
-      outputSchema,
+      annotations: readAnnotations,
+      outputSchema: toolEnvelopeSchemaFor(
+        z.object({
+          board: trelloBoardSchema,
+          lists: z.array(trelloListSchema).optional(),
+          labels: z.array(trelloLabelSchema).optional(),
+          cards: z.array(trelloCardSchema).optional(),
+        }),
+      ),
     },
-    async ({ profile, boardId, fields, displayHeading }) =>
-      withCardListResult(
+    async ({
+      profile,
+      fresh,
+      boardId,
+      include,
+      boardFields,
+      listFilter,
+      listFields,
+      cardFields,
+      displayHeading,
+    }) =>
+      withClientEnvelope(
         profile,
-        (client) => client.boardCards(boardId, { fields }),
-        displayHeading,
+        async (client) => {
+          const requested = new Set(include);
+          const [board, lists, labels, cards] = await Promise.all([
+            client.boardGet(boardId, { fields: boardFields }),
+            requested.has("lists")
+              ? client.boardLists(boardId, {
+                  filter: listFilter,
+                  fields: listFields,
+                })
+              : undefined,
+            requested.has("labels")
+              ? client.boardLabels(boardId, { limit: 1000 })
+              : undefined,
+            requested.has("cards")
+              ? client.boardCards(boardId, { fields: cardFields })
+              : undefined,
+          ]);
+          return boardContextEnvelope({
+            board,
+            lists,
+            labels,
+            cards,
+            displayHeading,
+          });
+        },
+        fresh,
       ),
   );
 }

@@ -97,6 +97,27 @@ export function registerCardCommands(program: Command): void {
     );
 
   cards
+    .command("edit-comment <id> <commentId>")
+    .description("Edit a comment on a card")
+    .requiredOption("--text <text>", "New comment body")
+    .action((id, commentId, opts, cmd) =>
+      run(cmd, async () => {
+        const { client } = getClient(rootOpts(cmd).profile);
+        return client.cardEditComment(id, commentId, opts.text);
+      }),
+    );
+
+  cards
+    .command("delete-comment <id> <commentId>")
+    .description("Permanently delete a comment — irreversible")
+    .action((id, commentId, _opts, cmd) =>
+      run(cmd, async () => {
+        const { client } = getClient(rootOpts(cmd).profile);
+        return client.cardDeleteComment(id, commentId);
+      }),
+    );
+
+  cards
     .command("archive <id>")
     .description("Close (archive) a card — reversible in Trello UI")
     .action((id, _opts, cmd) =>

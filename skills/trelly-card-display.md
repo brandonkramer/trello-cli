@@ -5,7 +5,7 @@ board, column, "what's on…"), you MUST NOT reply with a plain numbered title l
 
 ## MCP (Cursor, Claude Code, Codex with trelly-mcp)
 
-`trello_list_cards` and `trello_board_cards` return:
+`trello_list_cards` and `trello_board_context` with `include: ["cards"]` return:
 
 - `display` — markdown-v1, ready to paste (linked titles + badges)
 - `data` — slim JSON for automation
@@ -30,7 +30,7 @@ contract, then apply **Manual format** below (or call MCP when available).
 
 ## Manual format (raw JSON only)
 
-Use when you have card JSON but no pre-rendered markdown — e.g. MCP `trello_api`,
+Use when you have card JSON but no pre-rendered markdown — e.g. MCP `trello_api_get`,
 CLI `--json` after the jq slim step, or any path where `display` is missing.
 
 Example line:
@@ -46,7 +46,7 @@ Example line:
 - Labels: colored dot + name in backticks. Trello color → emoji: red 🔴 · orange 🟠 ·
   yellow 🟡 · green/lime 🟢 · blue/sky 🔵 · purple/pink 🟣 · black ⚫ · none ⚪.
 - Custom-field chips (e.g. `Priority: Highest`): fetch defs once via GET
-  `/boards/{boardId}/customFields` (`trello_api` or `trelly api`), request
+  `/boards/{boardId}/customFields` (`trello_api_get` or `trelly api`), request
   `customFieldItems` on cards, match `idValue` → option text/color. Skip unless the
   user wants them — it's an extra call.
 
