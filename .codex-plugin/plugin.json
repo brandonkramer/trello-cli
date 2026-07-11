@@ -1,6 +1,6 @@
 {
   "name": "trelly",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "Trello CLI + MCP — boards, lists, cards, search, and raw API via trelly-mcp",
   "author": {
     "name": "brandonkramer",

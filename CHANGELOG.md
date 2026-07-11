@@ -7,6 +7,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [Unreleased]
 
+## [0.3.8] - 2026-07-11
+
 ### Added
 
 - CLI reads now use a bounded, short-lived disk cache with a global `--fresh` bypass and
@@ -199,7 +201,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 Early public releases — CLI + MCP foundation, multi-profile auth, kanban TUI, search,
 webhooks, `trelly api` escape hatch. See git history before `v0.2.0` for details.
 
-[Unreleased]: https://github.com/brandonkramer/trelly/compare/v0.3.7...HEAD
+[Unreleased]: https://github.com/brandonkramer/trelly/compare/v0.3.8...HEAD
+[0.3.8]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.8
 [0.3.7]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.7
 [0.3.6]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.6
 [0.3.5]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.5
