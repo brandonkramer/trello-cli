@@ -16,6 +16,8 @@ npm package root is the plugin bundle (skills + MCP + launcher scripts).
 - **CLI** (`trelly`) is optional for humans/scripts; the plugin does not require global
   npm install if the IDE loads the plugin from this repository (MCP uses bundled
   `bin/trelly-mcp`).
+- **Installer** (`trelly install`) detects, validates, installs, and repairs Cursor,
+  Claude Code, and Codex plugins while preserving unrelated marketplace entries.
 
 Successful MCP GET requests use a bounded in-process cache with short, resource-specific
 TTLs, concurrent request deduplication, and mutation-aware invalidation. Read tools accept

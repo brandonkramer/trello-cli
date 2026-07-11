@@ -39,6 +39,10 @@ describes data handling for marketplace review and end users.
 - Cursor, Claude Code, and Codex plugins bundle the same `trelly-mcp` stdio server and
   skills. Enabling the plugin lets the IDE spawn `trelly-mcp`; tool calls follow the same
   Trello API path as the CLI.
+- `trelly install` checks local Cursor, Claude Code, and Codex plugin inventories and
+  detects whether their local MCP settings already contain a Trelly entry. It writes only
+  Trelly plugin files and Trelly-specific marketplace entries; this local installation
+  state is not uploaded to the trelly author.
 - IDE vendors (Cursor, Anthropic, OpenAI) may log prompts or tool traffic according to
   their own product policies. That is outside trelly’s control.
 

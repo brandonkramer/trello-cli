@@ -30,6 +30,27 @@ afterEach(() => {
 });
 
 describe("plugin installation planning", () => {
+  it("keeps every shipped plugin manifest aligned with the package version", () => {
+    const packageVersion = (
+      JSON.parse(
+        readFileSync(join(import.meta.dirname, "..", "package.json"), "utf8"),
+      ) as {
+        version: string;
+      }
+    ).version;
+    for (const manifest of [
+      ".cursor-plugin/plugin.json",
+      ".claude-plugin/plugin.json",
+      ".codex-plugin/plugin.json",
+      ".antigravity-plugin/plugin.json",
+    ]) {
+      const payload = JSON.parse(
+        readFileSync(join(import.meta.dirname, "..", manifest), "utf8"),
+      ) as { version?: unknown };
+      assert.equal(payload.version, packageVersion, manifest);
+    }
+  });
+
   it("detects available hosts and a broken same-version Cursor plugin", async () => {
     const root = makePackage("0.3.5");
     const home = makeDirectory();

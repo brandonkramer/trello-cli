@@ -55,6 +55,7 @@
     "lint": "biome check .",
     "fmt": "biome format --write .",
     "fmt:check": "biome check .",
+    "version": "bun src/sync-plugin-versions.ts",
     "postinstall": "chmod +x bin/trelly bin/trelly-mcp bin/run-ts bin/install-cursor-plugin-local.sh 2>/dev/null || true",
     "prepublishOnly": "bun run typecheck && bun test && bun run lint"
   },

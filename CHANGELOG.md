@@ -7,6 +7,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [Unreleased]
 
+## [0.3.6] - 2026-07-11
+
+### Changed
+
+- Privacy and plugin documentation now describe the local agent-plugin installer and the
+  plugin inventory/configuration state it checks.
+
+### Fixed
+
+- Cursor, Claude Code, Codex, and Antigravity manifest versions now stay synchronized
+  automatically with `package.json` during releases. This repairs the version mismatch in
+  `0.3.5` that caused `trelly install` to reject its bundled plugins.
+
 ## [0.3.5] - 2026-07-11
 
 ### Added
@@ -168,7 +181,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 Early public releases — CLI + MCP foundation, multi-profile auth, kanban TUI, search,
 webhooks, `trelly api` escape hatch. See git history before `v0.2.0` for details.
 
-[Unreleased]: https://github.com/brandonkramer/trelly/compare/v0.3.5...HEAD
+[Unreleased]: https://github.com/brandonkramer/trelly/compare/v0.3.6...HEAD
+[0.3.6]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.6
 [0.3.5]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.5
 [0.3.4]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.4
 [0.3.3]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.3
