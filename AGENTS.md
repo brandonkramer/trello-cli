@@ -17,7 +17,8 @@ indents it).
 - `src/mcp/` — `server.ts`, `tools/` (tool registrations), `handlers.ts`, in-process
   GET cache in `cache.ts`
 - `powerup/` — standalone Trello Power-Up iframe assets deployed to `tr3lly.dev`
-- `bin/` — bash launchers: `trelly`, `trelly-mcp`
+- `bin/` — Node launchers: `trelly`, `trelly-mcp`, `run-ts` (Bun preferred, else tsx);
+  `launch-cursor-mcp.mjs` resolves Cursor plugin MCP outside the workspace cwd
 
 ## Commands
 
@@ -26,7 +27,7 @@ bun install
 bun run typecheck   # tsc --noEmit
 bun test
 bun run lint        # biome check .
-./bin/trelly --help
+node bin/trelly --help
 ```
 
 Run all three checks before committing.

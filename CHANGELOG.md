@@ -7,6 +7,24 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [Unreleased]
 
+### Added
+
+- Windows support: npm installs are no longer blocked, and CLI/MCP launchers run under
+  Node on Windows, macOS, and Linux.
+
+### Changed
+
+- `bin/trelly`, `bin/trelly-mcp`, and `bin/run-ts` are Node launchers (Bun still preferred
+  when present; `tsx` remains the Node fallback).
+- Cursor plugin MCP wiring uses a Node resolver (`bin/launch-cursor-mcp.mjs`) instead of
+  a bash one-liner.
+
+### Fixed
+
+- PATH lookups honor Windows path separators and `PATHEXT`.
+- Install-path classification and `npm`/`bun` updates work with Windows path shapes.
+- Plugin symlinks fall back to a copy when the OS denies symlink creation.
+
 ## [0.3.8] - 2026-07-11
 
 ### Added

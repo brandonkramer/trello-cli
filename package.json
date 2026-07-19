@@ -26,10 +26,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "os": [
-    "darwin",
-    "linux"
-  ],
   "files": [
     "bin/",
     "src/",
@@ -56,7 +52,7 @@
     "fmt": "biome format --write .",
     "fmt:check": "biome check .",
     "version": "bun src/sync-plugin-versions.ts",
-    "postinstall": "chmod +x bin/trelly bin/trelly-mcp bin/run-ts bin/install-cursor-plugin-local.sh 2>/dev/null || true",
+    "postinstall": "node -e \"try{const{chmodSync}=require('fs');for(const f of['bin/trelly','bin/trelly-mcp','bin/run-ts','bin/launch-cursor-mcp.mjs','bin/install-cursor-plugin-local.sh']){try{chmodSync(f,0o755)}catch{}}}catch{}\"",
     "prepublishOnly": "bun run typecheck && bun test && bun run lint"
   },
   "engines": {

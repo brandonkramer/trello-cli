@@ -17,16 +17,17 @@ npm install -g trelly
 brew install brandonkramer/tap/trelly
 ```
 
-Node.js 22+ is required. You can also run Trelly without installing it with
-`npx trelly` or `bunx trelly`.
+Node.js 22+ is required (Windows, macOS, and Linux). You can also run Trelly without
+installing it with `npx trelly` or `bunx trelly`.
 
 To run from source:
 
 ```bash
 git clone https://github.com/brandonkramer/trelly.git
 cd trelly
-bun install
-./bin/trelly --help
+bun install   # or: npm install
+bun bin/trelly --help
+# Node fallback: node bin/trelly --help
 ```
 
 ## Authenticate

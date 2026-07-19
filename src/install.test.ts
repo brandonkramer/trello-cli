@@ -88,18 +88,21 @@ describe("plugin installation planning", () => {
   it("resolves Cursor's bundled MCP launcher outside the plugin directory", () => {
     const home = makeDirectory();
     const workingDirectory = makeDirectory();
-    const launcher = join(
-      home,
-      ".cursor",
-      "plugins",
-      "local",
-      "trelly",
-      "bin",
-      "trelly-mcp",
+    const pluginBin = join(home, ".cursor", "plugins", "local", "trelly", "bin");
+    mkdirSync(pluginBin, { recursive: true });
+    const resolvedMarker = join(home, "resolved");
+    writeFileSync(
+      join(pluginBin, "trelly-mcp"),
+      `#!/usr/bin/env node\nimport { writeFileSync } from "node:fs";\nwriteFileSync(${JSON.stringify(resolvedMarker)}, "resolved");\n`,
     );
-    mkdirSync(join(launcher, ".."), { recursive: true });
-    writeFileSync(launcher, '#!/bin/sh\nprintf resolved > "$HOME/resolved"\n');
-    chmodSync(launcher, 0o755);
+    chmodSync(join(pluginBin, "trelly-mcp"), 0o755);
+    writeFileSync(
+      join(pluginBin, "launch-cursor-mcp.mjs"),
+      readFileSync(
+        join(import.meta.dirname, "..", "bin", "launch-cursor-mcp.mjs"),
+        "utf8",
+      ),
+    );
     const config = JSON.parse(
       readFileSync(join(import.meta.dirname, "..", "mcp.json"), "utf8"),
     ) as {
@@ -111,13 +114,18 @@ describe("plugin installation planning", () => {
       config.mcpServers.trelly.args,
       {
         cwd: workingDirectory,
-        env: { ...process.env, HOME: home, PATH: "/usr/bin:/bin" },
+        env: {
+          ...process.env,
+          HOME: home,
+          USERPROFILE: home,
+          PATH: process.env.PATH ?? "",
+        },
         encoding: "utf8",
       },
     );
 
-    assert.equal(result.status, 0, result.stderr);
-    assert.equal(readFileSync(join(home, "resolved"), "utf8"), "resolved");
+    assert.equal(result.status, 0, result.stderr ?? result.error?.message);
+    assert.equal(readFileSync(resolvedMarker, "utf8"), "resolved");
   });
 });
 
@@ -320,11 +328,12 @@ function makePackage(version: string): string {
     writeFileSync(join(root, "skills", skill, "SKILL.md"), `# ${skill}\n`);
   }
   mkdirSync(join(root, "bin"), { recursive: true });
-  writeFileSync(join(root, "bin", "trelly-mcp"), "#!/bin/sh\n");
+  writeFileSync(join(root, "bin", "trelly-mcp"), "#!/usr/bin/env node\n");
   chmodSync(join(root, "bin", "trelly-mcp"), 0o755);
+  writeFileSync(join(root, "bin", "launch-cursor-mcp.mjs"), "// test stub\n");
   writeFileSync(
     join(root, "mcp.json"),
-    JSON.stringify({ mcpServers: { trelly: { command: "bash" } } }),
+    JSON.stringify({ mcpServers: { trelly: { command: "node" } } }),
   );
   return root;
 }
@@ -345,12 +354,13 @@ function copyBundle(source: string, destination: string, includeMcp: boolean): v
     writeFileSync(join(destination, "skills", skill, "SKILL.md"), "# skill\n");
   }
   mkdirSync(join(destination, "bin"), { recursive: true });
-  writeFileSync(join(destination, "bin", "trelly-mcp"), "#!/bin/sh\n");
+  writeFileSync(join(destination, "bin", "trelly-mcp"), "#!/usr/bin/env node\n");
   chmodSync(join(destination, "bin", "trelly-mcp"), 0o755);
+  writeFileSync(join(destination, "bin", "launch-cursor-mcp.mjs"), "// test stub\n");
   if (includeMcp) {
     writeFileSync(
       join(destination, "mcp.json"),
-      JSON.stringify({ mcpServers: { trelly: { command: "bash" } } }),
+      JSON.stringify({ mcpServers: { trelly: { command: "node" } } }),
     );
   }
 }

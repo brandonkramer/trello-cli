@@ -1,36 +1,47 @@
-#!/usr/bin/env bash
-set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+#!/usr/bin/env node
+import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { homedir } from "node:os";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-run_ts() {
-  local entry="$1"
-  shift
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const [entry, ...args] = process.argv.slice(2);
 
-  if command -v bun >/dev/null 2>&1 && bun --version >/dev/null 2>&1; then
-    exec bun run "$ROOT/$entry" "$@"
-  fi
-
-  if [[ -x "$HOME/.bun/bin/bun" ]]; then
-    exec "$HOME/.bun/bin/bun" run "$ROOT/$entry" "$@"
-  fi
-
-  if [[ -x "$ROOT/node_modules/.bin/tsx" ]]; then
-    exec "$ROOT/node_modules/.bin/tsx" "$ROOT/$entry" "$@"
-  fi
-
-  # hoisted layout: installed as a dependency, tsx lands in the parent .bin
-  if [[ -x "$ROOT/../.bin/tsx" ]]; then
-    exec "$ROOT/../.bin/tsx" "$ROOT/$entry" "$@"
-  fi
-
-  if command -v tsx >/dev/null 2>&1; then
-    exec tsx "$ROOT/$entry" "$@"
-  fi
-
-  echo "No runtime found. Install deps first:" >&2
-  echo "  bun install" >&2
-  echo "  # fallback (Node 22+): npm install" >&2
-  exit 1
+if (!entry) {
+  console.error("usage: run-ts <entry> [args...]");
+  process.exit(2);
 }
 
-run_ts "$@"
+const bunHome = join(homedir(), ".bun", "bin", process.platform === "win32" ? "bun.exe" : "bun");
+const candidates = [
+  ["bun", ["run", join(root, entry), ...args]],
+  [bunHome, ["run", join(root, entry), ...args]],
+  [join(root, "node_modules", "tsx", "dist", "cli.mjs"), [join(root, entry), ...args]],
+  [join(root, "..", "tsx", "dist", "cli.mjs"), [join(root, entry), ...args]],
+  [join(root, "node_modules", ".bin", process.platform === "win32" ? "tsx.cmd" : "tsx"), [
+    join(root, entry),
+    ...args,
+  ]],
+  [join(root, "..", ".bin", process.platform === "win32" ? "tsx.cmd" : "tsx"), [
+    join(root, entry),
+    ...args,
+  ]],
+];
+
+for (const [command, commandArgs] of candidates) {
+  if (command !== "bun" && !existsSync(command)) continue;
+  const result = spawnSync(command, commandArgs, {
+    stdio: "inherit",
+    shell: false,
+    env: process.env,
+  });
+  if (result.error && command === "bun") continue;
+  if (result.error) continue;
+  process.exit(result.status ?? 1);
+}
+
+console.error("No runtime found. Install deps first:");
+console.error("  bun install");
+console.error("  # fallback (Node 22+): npm install");
+process.exit(1);

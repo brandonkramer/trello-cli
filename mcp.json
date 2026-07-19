@@ -1,10 +1,11 @@
 {
   "mcpServers": {
     "trelly": {
-      "command": "bash",
+      "command": "node",
       "args": [
-        "-c",
-        "LOCAL=\"$HOME/.cursor/plugins/local/trelly/bin/trelly-mcp\"; if [ -x \"$LOCAL\" ]; then exec \"$LOCAL\"; fi; CACHED=\"$(find \"$HOME/.cursor/plugins/cache\" -type f -path '*/bin/trelly-mcp' -perm -u+x -print -quit 2>/dev/null)\"; if [ -n \"$CACHED\" ]; then exec \"$CACHED\"; fi; if command -v trelly-mcp >/dev/null 2>&1; then exec trelly-mcp; fi; echo 'trelly-mcp not found; run trelly install --cursor' >&2; exit 127"
+        "--input-type=module",
+        "-e",
+        "import { spawn } from 'node:child_process'; import { existsSync, readdirSync, statSync } from 'node:fs'; import { homedir } from 'node:os'; import { join } from 'node:path'; const home = process.env.HOME || process.env.USERPROFILE || homedir(); const isFile = (p) => { try { return statSync(p).isFile(); } catch { return false; } }; const local = join(home, '.cursor', 'plugins', 'local', 'trelly', 'bin', 'launch-cursor-mcp.mjs'); let script = isFile(local) ? local : undefined; if (!script) { const stack = [[join(home, '.cursor', 'plugins', 'cache'), 8]]; while (stack.length > 0 && !script) { const [dir, depth] = stack.pop(); if (depth < 0 || !existsSync(dir)) continue; let entries; try { entries = readdirSync(dir, { withFileTypes: true }); } catch { continue; } for (const entry of entries) { const p = join(dir, entry.name); if (entry.isDirectory()) stack.push([p, depth - 1]); else if (entry.name === 'launch-cursor-mcp.mjs' && isFile(p)) { script = p; break; } } } } if (!script) { console.error('trelly-mcp not found; run trelly install --cursor'); process.exit(127); } const child = spawn(process.execPath, [script], { stdio: 'inherit', env: process.env }); child.on('exit', (code) => process.exit(code ?? 1)); child.on('error', (error) => { console.error(error.message); process.exit(1); });"
       ],
       "env": {
         "TRELLO_PROFILE": "default"

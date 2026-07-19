@@ -50,6 +50,12 @@ describe("update version and installation detection", () => {
       classifyInstallation("/home/me/.npm/_npx/abc/node_modules/trelly"),
       "ephemeral",
     );
+    assert.equal(
+      classifyInstallation(
+        "C:\\Users\\me\\AppData\\Roaming\\npm\\node_modules\\trelly",
+      ),
+      "npm",
+    );
   });
 });
 

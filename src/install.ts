@@ -1,8 +1,5 @@
 import {
-  accessSync,
-  constants,
   existsSync,
-  lstatSync,
   mkdirSync,
   readFileSync,
   realpathSync,
@@ -20,6 +17,7 @@ import {
   defaultRunCommand,
   type PluginHost,
 } from "./update.ts";
+import { findExecutable, isExecutableFile } from "./util/exec-path.ts";
 
 export type InstallStatus = {
   host: PluginHost;
@@ -268,7 +266,24 @@ function detectCursor(
     existsSync(join(dependencies.home, ".cursor")) ||
     (dependencies.platform === "darwin" &&
       (existsSync("/Applications/Cursor.app") ||
-        existsSync(join(dependencies.home, "Applications", "Cursor.app"))));
+        existsSync(join(dependencies.home, "Applications", "Cursor.app")))) ||
+    (dependencies.platform === "win32" &&
+      (existsSync(
+        join(
+          process.env.LOCALAPPDATA ?? join(dependencies.home, "AppData", "Local"),
+          "Programs",
+          "cursor",
+          "Cursor.exe",
+        ),
+      ) ||
+        existsSync(
+          join(
+            process.env.LOCALAPPDATA ?? join(dependencies.home, "AppData", "Local"),
+            "Programs",
+            "Cursor",
+            "Cursor.exe",
+          ),
+        )));
   const issue = installed ? validateBundle(path, "cursor") : undefined;
   return {
     host: "cursor",
@@ -584,9 +599,14 @@ function validateBundle(
     return "trelly-mcp skill is missing";
   }
   const executable = join(root, "bin", "trelly-mcp");
-  if (!isExecutable(executable)) return "bin/trelly-mcp is missing or not executable";
+  if (!isExecutableFile(executable)) {
+    return "bin/trelly-mcp is missing or not executable";
+  }
 
   if (host === "cursor") {
+    if (!existsSync(join(root, "bin", "launch-cursor-mcp.mjs"))) {
+      return "bin/launch-cursor-mcp.mjs is missing";
+    }
     if (manifest.mcpServers !== "mcp.json") {
       return "manifest must reference root mcp.json";
     }
@@ -612,7 +632,13 @@ function validateBundle(
 function replaceLink(path: string, target: string): void {
   mkdirSync(dirname(path), { recursive: true });
   rmSync(path, { recursive: true, force: true });
-  symlinkSync(realpathOrSelf(target), path, "dir");
+  const resolved = realpathOrSelf(target);
+  try {
+    symlinkSync(resolved, path, "dir");
+  } catch {
+    // Windows without Developer Mode / admin can't create symlinks.
+    atomicCopy(resolved, path);
+  }
 }
 
 function readPackageVersion(root: string): string {
@@ -800,24 +826,6 @@ function realpathOrSelf(path: string): string {
   } catch {
     return resolve(path);
   }
-}
-
-function isExecutable(path: string): boolean {
-  try {
-    accessSync(path, constants.X_OK);
-    return !lstatSync(path).isDirectory();
-  } catch {
-    return false;
-  }
-}
-
-function findExecutable(command: string): string | undefined {
-  for (const directory of (process.env.PATH ?? "").split(":")) {
-    if (!directory) continue;
-    const candidate = join(directory, command);
-    if (isExecutable(candidate)) return candidate;
-  }
-  return undefined;
 }
 
 function hostLabel(host: PluginHost): string {

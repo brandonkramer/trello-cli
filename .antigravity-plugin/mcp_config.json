@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "trelly": {
-      "command": "bash",
+      "command": "node",
       "args": ["${PLUGIN_ROOT}/../bin/trelly-mcp"],
       "env": {
         "TRELLO_PROFILE": "default"

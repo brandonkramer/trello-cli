@@ -25,7 +25,8 @@ TTLs, concurrent request deduplication, and mutation-aware invalidation. Read to
 
 ## Prerequisites (end users)
 
-1. **Node 22+** (or Bun) — `bin/run-ts` falls back to bundled `tsx` for MCP/CLI.
+1. **Node 22+** (or Bun) — `bin/run-ts` is a Node launcher that prefers Bun and falls
+   back to bundled `tsx` for MCP/CLI (Windows included).
 2. One-time Trello auth:
    ```bash
    trelly auth setup    # API key from https://trello.com/power-ups/admin

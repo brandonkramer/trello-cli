@@ -1,10 +1,7 @@
 import { spawn } from "node:child_process";
 import {
-  accessSync,
-  constants,
   cpSync,
   existsSync,
-  lstatSync,
   mkdirSync,
   readFileSync,
   realpathSync,
@@ -14,6 +11,7 @@ import {
 import { homedir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { findExecutable, normalizePathSeparators } from "./util/exec-path.ts";
 
 export type InstallKind =
   | "npm"
@@ -109,8 +107,10 @@ export function defaultPackageRoot(): string {
 }
 
 export function classifyInstallation(packageRoot: string): InstallKind {
-  const root = realpathOrSelf(packageRoot);
-  if (existsSync(join(root, ".git"))) return "source";
+  const root = normalizePathSeparators(realpathOrSelf(packageRoot));
+  if (existsSync(join(packageRoot, ".git")) || existsSync(join(root, ".git"))) {
+    return "source";
+  }
   if (root.includes("/Cellar/trelly/") || root.includes("/homebrew/Cellar/trelly/")) {
     return "homebrew";
   }
@@ -123,6 +123,14 @@ export function classifyInstallation(packageRoot: string): InstallKind {
   }
   if (root.includes("/.bun/install/global/node_modules/trelly")) return "bun";
   if (root.includes("/lib/node_modules/trelly")) return "npm";
+  if (
+    root.includes("/node_modules/trelly") &&
+    (root.includes("/npm/") ||
+      root.includes("/Roaming/npm") ||
+      root.includes("/nodejs/"))
+  ) {
+    return "npm";
+  }
   return "unknown";
 }
 
@@ -165,6 +173,8 @@ export async function defaultRunCommand(
     const child = spawn(command, args, {
       cwd: options.cwd,
       stdio: inherit ? "inherit" : ["ignore", "pipe", "pipe"],
+      // Windows resolves npm/bun shims via shell; Unix keeps argv arrays intact.
+      shell: process.platform === "win32",
     });
     const stdout: Buffer[] = [];
     const stderr: Buffer[] = [];
@@ -809,22 +819,6 @@ function realpathOrSelf(path: string): string {
   } catch {
     return resolve(path);
   }
-}
-
-function findExecutable(command: string): string | undefined {
-  for (const directory of (process.env.PATH ?? "").split(":")) {
-    if (!directory) continue;
-    const candidate = join(directory, command);
-    try {
-      if (!lstatSync(candidate).isDirectory()) {
-        accessSync(candidate, constants.X_OK);
-        return candidate;
-      }
-    } catch {
-      // Keep looking.
-    }
-  }
-  return undefined;
 }
 
 function capitalize(value: string): string {
