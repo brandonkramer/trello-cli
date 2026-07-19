@@ -1,6 +1,6 @@
 {
   "name": "trelly",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "Trello boards, lists, cards, search, and comments via MCP — with agent skills for CLI and trelly-mcp tools.",
   "author": {
     "name": "brandonkramer"

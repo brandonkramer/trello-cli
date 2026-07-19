@@ -7,6 +7,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [Unreleased]
 
+## [0.3.9] - 2026-07-18
+
 ### Added
 
 - Windows support: npm installs are no longer blocked, and CLI/MCP launchers run under
@@ -219,7 +221,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 Early public releases — CLI + MCP foundation, multi-profile auth, kanban TUI, search,
 webhooks, `trelly api` escape hatch. See git history before `v0.2.0` for details.
 
-[Unreleased]: https://github.com/brandonkramer/trelly/compare/v0.3.8...HEAD
+[Unreleased]: https://github.com/brandonkramer/trelly/compare/v0.3.9...HEAD
+[0.3.9]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.9
 [0.3.8]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.8
 [0.3.7]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.7
 [0.3.6]: https://github.com/brandonkramer/trelly/releases/tag/v0.3.6
